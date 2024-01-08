@@ -25,7 +25,7 @@ app.use('/search', projectRoutes)
 
 const http = require('http').Server(app);
 const cors = require('cors');
-let users=[];
+let users=[{}];
 app.use(cors());
 app.use((error, req, res, next) => {
     console.log(error);
@@ -51,14 +51,26 @@ const io = require("socket.io")(server, {
         // credentials: true,
     },
 });
-io.on('connection', (socket) => {
-    console.log("Connected to socket.io");
+io.on("connection",(socket)=>{
+    console.log("New Connection");
+
     socket.on('joined',({user})=>{
-        users.push(user);
-        console.log(`${user.name} has joined `);
-        socket.broadcast.emit('userJoined',{user: user?.category, message:users});
-        // socket.emit('welcome',{user:"Admin",message:`Welcome to the chat,${users[socket.id]} `})
-  })
-})
+        users[socket.id]=user
+          socket.broadcast.emit('userJoined',{message:` ${users[socket.id]} has joined`});
+        //   socket.emit('welcome',{user:"Admin",message:`Welcome to the chat,${users[socket.id]} `})
+    })
+
+    socket.on('message',({message,id})=>{
+        console.log('messageid:', id)
+        // io.to(id).emit('sendMessage',message);
+        socket.broadcast.emit('sendMessage',message);
+
+    })
+
+    socket.on('disconn',()=>{
+          socket.broadcast.emit('leave',{user:"Admin",message:`${users[socket.id]}  has left`});
+        console.log(`user left`);
+    })
+});
     // })
     // .catch(err => console.log('Connection Error:', err))

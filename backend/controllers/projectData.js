@@ -1,4 +1,4 @@
-const socketIO = require('../socket')
+// const socketIO = require('../socket')
 const StudentData = require('../models/studentData')
 const User = require('../models/user')
 
@@ -41,7 +41,6 @@ exports.projects = async (req, res, next) => {
 }
 //Search Category
 exports.category = async (req, res, next) => {
-    console.log('Request:', req)
     try {
         const keyword = req.query.name
             ? {

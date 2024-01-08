@@ -12,9 +12,22 @@ header .profile {
 }
 header .logout {
   cursor: pointer;
+  position: relative;
 }
 header .logout svg {
   margin-right: 5px;
+}
+header .logout count{
+  background-color: red;
+  color:#fff;
+  border-radius: 100%;
+  position: absolute;
+  z-index: 999;
+  padding: 0px 4px;
+  font-size: 12px;
+  font-weight: bold;
+  bottom: 12px;
+  left: -1px;
 }
 header h2 {
   margin: 0px 0px 0px 5px;
@@ -22,6 +35,37 @@ header h2 {
 header div {
   display: flex;
   align-items: center;
+}
+.notification{
+  border:1px solid lightcoral;
+  position: absolute;
+  right: 0;
+  top: 20px;
+  border-radius: 10px;
+  flex-direction: column;
+  z-index: 999;
+  width: 300px;
+  max-height: 100vh;
+  overflow: scroll;
+  align-items: flex-start;
+  background-color: lightgreen;
+}
+.notification .content {
+  flex-direction: column;
+  align-items: flex-start;
+  border-bottom:1px solid lightcoral;
+  width: -webkit-fill-available;;
+  margin-bottom:5px;
+  padding: 5px;
+}
+.notification .content:last-child{
+  border:none
+}
+.notification .content div{
+  margin-bottom:5px; 
+}
+.notification .content div:last-child{
+  margin: 0px;
 }
 .dashboard ul {
   list-style: none;
@@ -82,4 +126,7 @@ margin-bottom:10px;
   color: #fff;
   border: none;
   cursor: pointer;
+}
+error{
+  color: red
 }

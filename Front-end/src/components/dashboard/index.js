@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import openSocket from 'socket.io-client'
+import socketIo from "socket.io-client";
 import axios from 'axios'
 import ClipLoader from "react-spinners/ClipLoader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import './dashboard.css'
 
-const ENDPOINT = "http://localhost:8080";
+
 let socket;
+const ENDPOINT = "http://localhost:8080";
 
 function Dashboard() {
     const { state } = useLocation()
@@ -16,9 +17,10 @@ function Dashboard() {
     const [loading, setLoading] = useState(false)
     const [list, setList] = useState([])
     const [socketId, setSocketId] = useState('')
-    const [messages, setMessages] = useState([])
     const [projectList, setProjectList] = useState([])
-    const [socketConnected, setSocketConnected] = useState(false)
+    const [count, setCount] = useState(false)
+    const [showNotification, setShowNotification] = useState(false)
+    const [validation, setValidation] = useState(false)
     const [selectedMember, setSelectedMember] = useState("")
     const [project, setProject] = useState({
         topic: '',
@@ -26,23 +28,10 @@ function Dashboard() {
         searchCategory: '',
         description: ''
     })
+    const [sendMessage, setSendMessage] = useState([])
     const [category] = useState(
         state?.category === "Supervisor" ? 'student'
             : 'supervisor')
-    useEffect(() => {
-        socket = openSocket(ENDPOINT, {transports: ['websocket']})
-        
-        socket.on('connect', () => {
-            setSocketId(socket.id)
-            console.log('socket id:', socket.id)
-        })
-        socket.emit('joined', { user: state })
-        socket.on('userJoined', (data) => {
-            setMessages([...messages, data]);
-            console.log(data.user, data.message, messages);
-        })
-    }, [])
-
     useEffect(() => {
         setLoading(true)
         axios.get(`http://localhost:8080/auth/${category}s`)
@@ -61,13 +50,37 @@ function Dashboard() {
             .catch(err => {
                 console.log(err)
             })
-        // socket = openSocket('http://localhost:8080')
-
-
+        socket = socketIo(ENDPOINT, { transports: ['websocket'] })
+        socket.on('connect', () => {
+            console.log('socket id:', socket.id, state?.id)
+            setSocketId(socket.id)
+        })
+        socket.emit('joined', { user: state?.id })
+        socket.on('userJoined', (data) => {
+        })
+        socket.on('leave', (data) => {
+            console.log(data.user, data.message)
+        })
+        return () => {
+            socket.emit('disconn');
+            socket.off();
+        }
     }, [])
+    const countHandler = () => {
+        console.log('clickeddd...')
+        if(sendMessage.length > 0){
+            setShowNotification(!showNotification)
+        }
+        setCount(false)
+    }
     const submitHandler = async (e) => {
         e.preventDefault()
+        if(project.topic === '' || project.category === '' || project.description===''){
+            setValidation(true)
+            return
+        }
         await axios.post('http://localhost:8080/project/studentData', project)
+        socket.emit('message', { message: { ...project, receiver_id: selectedMember }, id: socketId });
     }
     const memberHandler = (firstName, lastName, id) => {
         setProject(project => ({ ...project, ['category']: `${firstName}-${lastName}` }))
@@ -82,6 +95,18 @@ function Dashboard() {
         }
 
     }
+    useEffect(() => {
+        socket.on('sendMessage', (data) => {
+            if (data.receiver_id === state?.id) {
+                setSendMessage([...sendMessage, data]);
+                setCount(true)
+            }
+            console.log('sendMessagedata:', data, sendMessage);
+        })
+        return () => {
+            socket.off();
+        }
+    }, [sendMessage])
     return (
         <div className='dashboard'>
             <header>
@@ -95,11 +120,28 @@ function Dashboard() {
                     <h3>{state?.category}</h3>
                 </div>
                 <div className='logout'>
-                    <FontAwesomeIcon icon={faBell} />
+                    {sendMessage.length > 0 && count && <count onClick={countHandler}>{sendMessage.length}</count> }
+                    <FontAwesomeIcon icon={faBell} onClick={countHandler}/>
                     <span onClick={() => navigate('/')}>Logout</span>
-                    <div className='notification'>
+                    {
+                        showNotification &&
+                        <div className='notification'>
+                            {
+                                sendMessage?.map(notifi => (
+                                    <div className='content'>
+                                        <div>
+                                            <strong>Project:</strong>
+                                            <span>{notifi.topic}</span>
+                                        </div><div>
+                                            <strong>Sender:</strong>
+                                            <span>{notifi.category}</span>
+                                        </div>
+                                    </div>
+                                ))
+                            }
 
-                    </div>
+                        </div>
+                    }
                 </div>
             </header>
             <div className='bottom-content'>
@@ -108,14 +150,17 @@ function Dashboard() {
                         <div>
                             <label>Topic</label>
                             <input type='text' name='topic' onChange={changeHandler} />
+                            {validation && project.topic === '' && <error>Please enter project topic</error>}
                         </div>
                         <div>
                             <label>{category}</label>
                             <input type='text' readOnly value={project.category} name='category' />
+                            {validation && project.category === '' && <error>{`Please enter ${state.category}`}</error>}
                         </div>
                         <div>
                             <label>Description</label>
                             <textarea name='description' onChange={changeHandler} />
+                            {validation && project.description === '' && <error>Please enter project description</error>}
                         </div>
                         <button type='submit' onClick={(e) => submitHandler(e)}>Send</button>
                     </form>
