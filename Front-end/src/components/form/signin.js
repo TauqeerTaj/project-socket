@@ -21,6 +21,7 @@ function Signin() {
         axios.post("http://localhost:8080/auth/login", signinData)
             .then(res => {
                 if (res) {
+                    localStorage.setItem('token', res.data.token);
                     setLoading(false)
                     navigate('./dashboard', {
                         state: {

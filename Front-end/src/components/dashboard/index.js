@@ -18,6 +18,7 @@ function Dashboard() {
     const [list, setList] = useState([])
     const [socketId, setSocketId] = useState('')
     const [projectList, setProjectList] = useState([])
+    const [countData, setCountData] = useState([])
     const [count, setCount] = useState(false)
     const [showNotification, setShowNotification] = useState(false)
     const [validation, setValidation] = useState(false)
@@ -67,10 +68,12 @@ function Dashboard() {
         }
     }, [])
     const countHandler = () => {
-        console.log('clickeddd...')
-        if(sendMessage.length > 0){
+        if(countData.length > 0){
+            setSendMessage([...sendMessage, ...countData])
             setShowNotification(!showNotification)
         }
+        setShowNotification(!showNotification)
+        setCountData([])
         setCount(false)
     }
     const submitHandler = async (e) => {
@@ -81,6 +84,14 @@ function Dashboard() {
         }
         await axios.post('http://localhost:8080/project/studentData', project)
         socket.emit('message', { message: { ...project, receiver_id: selectedMember }, id: socketId });
+        setProject({
+            ...project,
+            topic: '',
+            category: '',
+            searchCategory: '',
+            description: ''
+
+        })
     }
     const memberHandler = (firstName, lastName, id) => {
         setProject(project => ({ ...project, ['category']: `${firstName}-${lastName}` }))
@@ -98,15 +109,11 @@ function Dashboard() {
     useEffect(() => {
         socket.on('sendMessage', (data) => {
             if (data.receiver_id === state?.id) {
-                setSendMessage([...sendMessage, data]);
+                setCountData([...countData, data]);
                 setCount(true)
             }
-            console.log('sendMessagedata:', data, sendMessage);
         })
-        return () => {
-            socket.off();
-        }
-    }, [sendMessage])
+    }, [countData])
     return (
         <div className='dashboard'>
             <header>
@@ -120,9 +127,14 @@ function Dashboard() {
                     <h3>{state?.category}</h3>
                 </div>
                 <div className='logout'>
-                    {sendMessage.length > 0 && count && <count onClick={countHandler}>{sendMessage.length}</count> }
+                    {countData.length > 0 && count && <count onClick={countHandler}>{countData.length}</count> }
                     <FontAwesomeIcon icon={faBell} onClick={countHandler}/>
-                    <span onClick={() => navigate('/')}>Logout</span>
+                    <span onClick={() => {
+                        localStorage.removeItem('token')
+                        navigate('/')
+                        socket.emit('disconn');
+                        socket.off();
+                    }}>Logout</span>
                     {
                         showNotification &&
                         <div className='notification'>
@@ -149,7 +161,7 @@ function Dashboard() {
                     <form onSubmit={(e) => submitHandler(e)}>
                         <div>
                             <label>Topic</label>
-                            <input type='text' name='topic' onChange={changeHandler} />
+                            <input type='text' name='topic' onChange={changeHandler} value={project.topic}/>
                             {validation && project.topic === '' && <error>Please enter project topic</error>}
                         </div>
                         <div>
@@ -159,7 +171,7 @@ function Dashboard() {
                         </div>
                         <div>
                             <label>Description</label>
-                            <textarea name='description' onChange={changeHandler} />
+                            <textarea name='description' onChange={changeHandler} value={project.description}/>
                             {validation && project.description === '' && <error>Please enter project description</error>}
                         </div>
                         <button type='submit' onClick={(e) => submitHandler(e)}>Send</button>

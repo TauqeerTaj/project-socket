@@ -39,25 +39,6 @@ exports.signup = async (req, res, next) => {
             }
             next(new Error("email already exist"))
         })
-
-    // try {
-    //     const user = new User({
-    //         firstName: req.body.firstName,
-    //         lastName: req.body.lastName,
-    //         email: req.body.email,
-    //         password: req.body.password,
-    //         category: req.body.category,
-    //         profileImage: req.body.profileImage
-    //     })
-    //     await user.save()
-    //     res.status(201).send({ message: 'user created successfully!', userId: user._id })
-    //     return
-    // }
-    // catch (err) {
-    //     console.log("errorororooror:")
-    //     res.status(500).send({ message: 'Email already exist!', error: err })
-    //     return
-    // }
 }
 
 exports.login = (req, res, next) => {
