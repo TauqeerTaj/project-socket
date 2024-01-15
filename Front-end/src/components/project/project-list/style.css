@@ -1,0 +1,14 @@
+.projectList li{
+    flex-direction: column!important;
+    align-items: baseline!important;
+    text-align: left!important;
+}
+.projectList li div{
+    text-align: left!important;
+}
+.projectList li:hover{
+    color: unset!important
+}
+.projectList li:hover div:first-child h3{
+    color: red
+}

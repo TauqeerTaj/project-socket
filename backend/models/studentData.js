@@ -11,8 +11,14 @@ const userSchema = new Schema({
         required: true,
     },
     category: {
-        type: String,
-        required: true
+        name: {
+            type: String,
+            required: true
+        },
+        id: {
+            type: String,
+            required: true
+        }
     }
 })
 module.exports = mongoose.model('StudentProject', userSchema)

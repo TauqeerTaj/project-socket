@@ -1,0 +1,32 @@
+.project-details h1{
+    text-align: center;
+    padding:5px 0px;
+    margin:0px;
+}
+header{
+    position: relative;
+    padding:0px 20px;
+    border-bottom:1px solid #ccc;
+}
+header button{
+    background-color: coral;
+    color: #fff;
+    border: none;
+    position: absolute;
+    z-index: 999;
+    bottom:5px;
+}
+.content{
+    padding: 0px 20px;
+}
+.details-header{
+    display: flex;
+    justify-content: space-between;
+}
+.details-header div{
+    display:flex;
+    align-items: center;
+}
+.details-header div h3{
+    margin-right:5px
+}

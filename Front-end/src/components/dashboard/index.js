@@ -6,7 +6,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import './dashboard.css'
-
+import ProjectList from '../project/project-list/ProjectList';
 
 let socket;
 const ENDPOINT = "http://localhost:8080";
@@ -25,7 +25,10 @@ function Dashboard() {
     const [selectedMember, setSelectedMember] = useState("")
     const [project, setProject] = useState({
         topic: '',
-        category: '',
+        category: {
+            id: '',
+            name: ''
+        },
         searchCategory: '',
         description: ''
     })
@@ -33,7 +36,18 @@ function Dashboard() {
     const [category] = useState(
         state?.category === "Supervisor" ? 'student'
             : 'supervisor')
+    const getProjects = () => {
+        axios.get(`http://localhost:8080/project/projects?id=${state.id}`)
+        .then(res => {
+            setLoading(false)
+            setProjectList([...res.data.list])
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
     useEffect(() => {
+        console.log('state:', state.id)
         setLoading(true)
         axios.get(`http://localhost:8080/auth/${category}s`)
             .then(res => {
@@ -43,14 +57,15 @@ function Dashboard() {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(`http://localhost:8080/project/projects`)
-            .then(res => {
-                setLoading(false)
-                setProjectList([...res.data.list])
-            })
-            .catch(err => {
-                console.log(err)
-            })
+            getProjects()
+        // axios.get(`http://localhost:8080/project/projects`)
+        //     .then(res => {
+        //         setLoading(false)
+        //         setProjectList([...res.data.list])
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //     })
         socket = socketIo(ENDPOINT, { transports: ['websocket'] })
         socket.on('connect', () => {
             console.log('socket id:', socket.id, state?.id)
@@ -78,23 +93,39 @@ function Dashboard() {
     }
     const submitHandler = async (e) => {
         e.preventDefault()
-        if(project.topic === '' || project.category === '' || project.description===''){
+        if(project.topic === '' || project.category.name === '' || project.description===''){
             setValidation(true)
             return
         }
-        await axios.post('http://localhost:8080/project/studentData', project)
-        socket.emit('message', { message: { ...project, receiver_id: selectedMember }, id: socketId });
-        setProject({
+        const payload = {
             ...project,
+            category: {
+                name: state.name,
+                id: selectedMember
+            }
+        }
+        await axios.post('http://localhost:8080/project/studentData', payload)
+        socket.emit('message', { message: { ...payload, receiver_id: selectedMember }, id: socketId });
+        setProject({
+            ...payload,
             topic: '',
-            category: '',
+            category: {
+                name: '',
+                id: ''
+            },
             searchCategory: '',
             description: ''
 
         })
     }
-    const memberHandler = (firstName, lastName, id) => {
-        setProject(project => ({ ...project, ['category']: `${firstName}-${lastName}` }))
+    const memberHandler = (name, id) => {
+        setProject(project => ({ 
+            ...project,
+            category: {
+                name: name,
+                id: id
+            }
+        }))
         setSelectedMember(id)
 
     }
@@ -111,6 +142,7 @@ function Dashboard() {
             if (data.receiver_id === state?.id) {
                 setCountData([...countData, data]);
                 setCount(true)
+                getProjects()
             }
         })
     }, [countData])
@@ -146,7 +178,7 @@ function Dashboard() {
                                             <span>{notifi.topic}</span>
                                         </div><div>
                                             <strong>Sender:</strong>
-                                            <span>{notifi.category}</span>
+                                            <span>{notifi.category.name}</span>
                                         </div>
                                     </div>
                                 ))
@@ -166,8 +198,8 @@ function Dashboard() {
                         </div>
                         <div>
                             <label>{category}</label>
-                            <input type='text' readOnly value={project.category} name='category' />
-                            {validation && project.category === '' && <error>{`Please enter ${state.category}`}</error>}
+                            <input type='text' readOnly value={project.category.name} name='category' />
+                            {validation && project.category.name === '' && <error>{`Please enter ${state.category}`}</error>}
                         </div>
                         <div>
                             <label>Description</label>
@@ -191,7 +223,7 @@ function Dashboard() {
                             data-testid="loader"
                         />
                         {list.map((item, i) => {
-                            return <li key={i} onClick={() => memberHandler(item.firstName, item.lastName, item._id)}>
+                            return <li key={i} onClick={() => memberHandler(item.firstName+item.lastName, item._id)}>
                                 <div>
                                     {item.firstName}-{item.lastName}
                                 </div>
@@ -204,6 +236,7 @@ function Dashboard() {
                     </ul>
                 </div>
             </div>
+            <ProjectList list={projectList} user={state}/>
         </div>
     )
 }

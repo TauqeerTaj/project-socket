@@ -39,9 +39,31 @@ exports.projects = async (req, res, next) => {
         res.status(500).send({ err: err })
     }
 }
+//GET User Projects
+exports.projects = async (req, res, next) => {
+    try {
+        console.log('req query:', req.query)
+        StudentData.find({
+            'category.id': req.query.id
+        })
+            .then(data => {
+                res.status(200).send({ list: data })
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500
+                }
+                next(err)
+            })
+    }
+    catch (err) {
+        res.status(500).send({ err: err })
+    }
+}
 //Search Category
 exports.category = async (req, res, next) => {
     try {
+        console.log('query search:', req.query)
         const keyword = req.query.name
             ? {
                 $or: [
