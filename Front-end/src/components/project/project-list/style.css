@@ -1,7 +1,15 @@
+.projectList ul{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
 .projectList li{
     flex-direction: column!important;
     align-items: baseline!important;
     text-align: left!important;
+    border-bottom: 1px solid #ccc;
+    padding: 0px 20px 5px 20px;
+    cursor: pointer;
 }
 .projectList li div{
     text-align: left!important;
@@ -11,4 +19,10 @@
 }
 .projectList li:hover div:first-child h3{
     color: red
+}
+.projectList h3{
+    margin: 5px 0px 5px 0px;
+}
+.spinner{
+    text-align: center;
 }

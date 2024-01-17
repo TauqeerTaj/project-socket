@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import socketIo from "socket.io-client";
 import axios from 'axios'
 import ClipLoader from "react-spinners/ClipLoader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
+import Header from '../header/Header';
 import './dashboard.css'
-import ProjectList from '../project/project-list/ProjectList';
 
 let socket;
 const ENDPOINT = "http://localhost:8080";
@@ -87,7 +87,9 @@ function Dashboard() {
             setSendMessage([...sendMessage, ...countData])
             setShowNotification(!showNotification)
         }
-        setShowNotification(!showNotification)
+        if(countData.length > 0 || sendMessage.length > 0){
+            setShowNotification(!showNotification)
+        }
         setCountData([])
         setCount(false)
     }
@@ -148,9 +150,61 @@ function Dashboard() {
     }, [countData])
     return (
         <div className='dashboard'>
+            {
+                state?.category === "Supervisor" ?
+                <><Header /><Navigate to='/projects' state={{ list: projectList, user: state }} /></> :
+                <div className='bottom-content'>
+                    <div className='form-section'>
+                        <form onSubmit={(e) => submitHandler(e)}>
+                            <div>
+                                <label>Topic</label>
+                                <input type='text' name='topic' onChange={changeHandler} value={project.topic}/>
+                                {validation && project.topic === '' && <error>Please enter project topic</error>}
+                            </div>
+                            <div>
+                                <label>{category}</label>
+                                <input type='text' readOnly value={project.category.name} name='category' />
+                                {validation && project.category.name === '' && <error>{`Please enter ${state.category}`}</error>}
+                            </div>
+                            <div>
+                                <label>Description</label>
+                                <textarea name='description' onChange={changeHandler} value={project.description}/>
+                                {validation && project.description === '' && <error>Please enter project description</error>}
+                            </div>
+                            <button type='submit' onClick={(e) => submitHandler(e)}>Send</button>
+                        </form>
+                    </div>
+                    <div className='right-content'>
+                        <div className='search'>
+                            <label>Search Category</label>
+                            <input type='search' name='searchCategory' onChange={changeHandler} value={project.searchCategory} />
+                        </div>
+                        <ul>
+                            <ClipLoader
+                                color="green"
+                                loading={loading}
+                                size={50}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            />
+                            {list.map((item, i) => {
+                                return <li key={i} onClick={() => memberHandler(item.firstName+item.lastName, item._id)}>
+                                    <div>
+                                        {item.firstName}-{item.lastName}
+                                    </div>
+                                    <div>
+                                        <img src={item.profileImage} alt='profile'/>
+                                    </div>
+                                </li>
+                            }
+                            )}
+                        </ul>
+                    </div>
+                </div>
+            }
             <header>
                 <div>
-                    <img src={state?.profile} className='profile' />
+                    <img src={state?.profile} className='profile' alt='profile'/>
                     <h2>
                         {state?.name}
                     </h2>
@@ -188,55 +242,6 @@ function Dashboard() {
                     }
                 </div>
             </header>
-            <div className='bottom-content'>
-                <div className='form-section'>
-                    <form onSubmit={(e) => submitHandler(e)}>
-                        <div>
-                            <label>Topic</label>
-                            <input type='text' name='topic' onChange={changeHandler} value={project.topic}/>
-                            {validation && project.topic === '' && <error>Please enter project topic</error>}
-                        </div>
-                        <div>
-                            <label>{category}</label>
-                            <input type='text' readOnly value={project.category.name} name='category' />
-                            {validation && project.category.name === '' && <error>{`Please enter ${state.category}`}</error>}
-                        </div>
-                        <div>
-                            <label>Description</label>
-                            <textarea name='description' onChange={changeHandler} value={project.description}/>
-                            {validation && project.description === '' && <error>Please enter project description</error>}
-                        </div>
-                        <button type='submit' onClick={(e) => submitHandler(e)}>Send</button>
-                    </form>
-                </div>
-                <div className='right-content'>
-                    <div className='search'>
-                        <label>Search Category</label>
-                        <input type='search' name='searchCategory' onChange={changeHandler} value={project.searchCategory} />
-                    </div>
-                    <ul>
-                        <ClipLoader
-                            color="green"
-                            loading={loading}
-                            size={50}
-                            aria-label="Loading Spinner"
-                            data-testid="loader"
-                        />
-                        {list.map((item, i) => {
-                            return <li key={i} onClick={() => memberHandler(item.firstName+item.lastName, item._id)}>
-                                <div>
-                                    {item.firstName}-{item.lastName}
-                                </div>
-                                <div>
-                                    <img src={item.profileImage} />
-                                </div>
-                            </li>
-                        }
-                        )}
-                    </ul>
-                </div>
-            </div>
-            <ProjectList list={projectList} user={state}/>
         </div>
     )
 }

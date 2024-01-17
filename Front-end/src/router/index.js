@@ -4,6 +4,7 @@ import Signup from '../components/form/signup';
 import Signin from '../components/form/signin';
 import Dashboard from '../components/dashboard';
 import ProjectDetails from '../components/project/project-details/ProjectDetails';
+import ProjectList from '../components/project/project-list/ProjectList';
 
 function Routing() {
     const navigate = useNavigate()
@@ -19,8 +20,9 @@ function Routing() {
             <Route path='/signup' element={<Signup/>}></Route>
             {token && 
             <>
-            <Route path='/dashboard' element={<Dashboard />}>
-            </Route><Route path='/project-details' element={<ProjectDetails />}></Route>
+            <Route path='/dashboard' element={<Dashboard />}></Route>
+            <Route path='/projects' element={<ProjectList />}></Route>
+            <Route path='/project-details' element={<ProjectDetails />}></Route>
             </>
             }
         </Routes>
