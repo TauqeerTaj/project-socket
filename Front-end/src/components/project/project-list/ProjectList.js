@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios'
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { getProjectList,getApprovalList } from '../../../api/project';
 import './style.css'
 
 function ProjectList({listLoader}) {
@@ -14,33 +14,37 @@ function ProjectList({listLoader}) {
     const [loading, setLoading] = useState(false)
     const [toggleApproved, setToggleApproved] = useState(false)
 
-    const getProjects = () => {
-        setLoading(true)
-        setToggleApproved(false)
-        axios.get(`http://localhost:8080/project/projects?id=${state.user.id}`)
-        .then(res => {
-            setLoading(false)
-            setList([...res.data.list])
-        })
-        .catch(err => {
+    const getProjects = async() => {
+        try{
+            setLoading(true)
+            setToggleApproved(false)
+            const data = await getProjectList(state?.user?.id)
+            console.log('data refactor:', data)
+            if(data.length){
+                setLoading(false)
+                setList([...data])
+            }
+        }
+        catch (err) {
             console.log(err)
-        })
+        }
     }
-    const getApprovedProjects = () => {
-        setLoading(true)
-        setToggleApproved(true)
-        axios.get(`http://localhost:8080/project/approvedProjects`)
-        .then(res => {
-            setLoading(false)
-            setList([...res.data.list])
-        })
-        .catch(err => {
+    const getApprovedProjects = async() => {
+        try{
+            setLoading(true)
+            setToggleApproved(true)
+            const data = await getApprovalList()
+            if(data.length){
+                setLoading(false)
+                setList([...data])
+            }
+        }
+        catch (err) {
             console.log(err)
-        })
+        }
     }
 
     useEffect(()=>{
-        console.log('loader:', listLoader)
         getProjects()
     },[listLoader])
 
@@ -58,7 +62,7 @@ function ProjectList({listLoader}) {
       }
     return (
         <div className='projectList'>
-                <h1>Projects <a onClick={!toggleApproved ? getApprovedProjects : getProjects}>{!toggleApproved ? 'Approved projects' : 'All projects'}<FontAwesomeIcon icon={faArrowRight}/></a></h1>
+                <h1>Projects <a onClick={!toggleApproved ? getApprovedProjects : getProjects}>{!toggleApproved ? 'Approved projects' : 'Projects'}<FontAwesomeIcon icon={faArrowRight}/></a></h1>
                 <div className='spinner'>
                     <ClipLoader
                         color="green"

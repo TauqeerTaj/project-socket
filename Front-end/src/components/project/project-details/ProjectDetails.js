@@ -1,6 +1,6 @@
 import React,{useEffect} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { approve,Delete } from '../../../api/project'
 import './style.css'
 
 function ProjectDetails() {
@@ -17,32 +17,25 @@ function ProjectDetails() {
         })
     }
 
-    const approveProject = (id) => {
-        axios.put(`http://localhost:8080/project/approve?approvedId=${id}`)
-        .then(res => {
-            console.log('approved:', res)
+    const approveProject = async(id) => {
+        const data = await approve(id)
+        if(data){
             navigate('/projects', {
                 state: {
                     user:{...state.user}
                 }
             })
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        }
     }
     const deleteProject = async(id) => {
-        await axios.delete(`http://localhost:8080/project/delete?deletedId=${id}`)
-        .then(res => {
+        const data = await Delete(id)
+        if(data.message){
             navigate('/projects', {
                 state: {
                     user:{...state.user}
                 }
             })
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        }
     }
     return (
         <div className={state.approved ? 'project-details approved' : 'project-details'}>
