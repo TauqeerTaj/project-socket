@@ -7,6 +7,7 @@ router.post('/studentData', projectController.studentData)
 router.get('/projects', projectController.projects)
 router.put('/approve', projectController.approve)
 router.get('/category', projectController.category)
+router.delete('/delete', projectController.delete)
 
 
 module.exports = router

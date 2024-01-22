@@ -31,6 +31,19 @@ function ProjectDetails() {
             console.log(err)
         })
     }
+    const deleteProject = async(id) => {
+        await axios.delete(`http://localhost:8080/project/delete?deletedId=${id}`)
+        .then(res => {
+            navigate('/projects', {
+                state: {
+                    user:{...state.user}
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
     return (
         <div className='project-details'>
             <header>
@@ -40,7 +53,7 @@ function ProjectDetails() {
                     <button className='approve' onClick={() => approveProject(state?._id ?? state?.id)}>
                         Approve
                     </button>
-                    <button className='reject'>
+                    <button className='reject' onClick={() => deleteProject(state?._id ?? state?.id)}>
                         Reject
                     </button>
                 </div>

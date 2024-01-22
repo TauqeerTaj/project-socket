@@ -68,7 +68,27 @@ exports.approve = async (req, res, next) => {
 	        { $set: { 'approved': true }}
           )
             .then(data => {
-                res.status(200).send({ message: 'Project has been approved!' })
+                res.status(201).send({ message: 'Project has been approved!' })
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500
+                }
+                next(err)
+            })
+    }
+    catch (err) {
+        res.status(500).send({ err: err })
+    }
+}
+//Delete Project
+exports.delete = async (req, res, next) => {
+    try {
+        await StudentData.deleteOne(
+            {_id: req.query.deletedId}
+          )
+            .then(data => {
+                res.status(204).send({ message: 'Project has been rejected!' })
             })
             .catch(err => {
                 if (!err.statusCode) {
