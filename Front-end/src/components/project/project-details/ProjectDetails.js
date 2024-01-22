@@ -45,7 +45,7 @@ function ProjectDetails() {
         })
     }
     return (
-        <div className='project-details'>
+        <div className={state.approved ? 'project-details approved' : 'project-details'}>
             <header>
                 <button onClick={buttonClickHandler} className='back'>Back</button>
                 <h1>Project Details</h1>

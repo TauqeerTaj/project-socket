@@ -44,7 +44,28 @@ exports.projects = async (req, res, next) => {
 exports.projects = async (req, res, next) => {
     try {
         StudentData.find({
-            'category.id': req.query.id
+            'category.id': req.query.id,
+            'approved': false
+        })
+            .then(data => {
+                res.status(200).send({ list: data })
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500
+                }
+                next(err)
+            })
+    }
+    catch (err) {
+        res.status(500).send({ err: err })
+    }
+}
+//GET Approved Projects
+exports.approvedProjects = async (req, res, next) => {
+    try {
+        StudentData.find({
+            'approved': true
         })
             .then(data => {
                 res.status(200).send({ list: data })

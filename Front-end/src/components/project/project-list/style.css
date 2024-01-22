@@ -3,6 +3,12 @@
     padding: 0px;
     list-style: none;
 }
+.projectList .approved{
+    background: url('../../../assets/approved.png') no-repeat;
+    background-position-y: top;
+    background-position-x: right;
+    background-size: 10%;
+}
 .projectList li{
     flex-direction: column!important;
     align-items: baseline!important;
@@ -24,7 +30,19 @@
 .projectList h1{
     text-align: center;
     background-color: lightskyblue;
-    padding: 5px 0px;
+    padding: 5px 20px;
+}
+.projectList h1 a{
+    font-size: 12px;
+    float:right;
+    display: flex;
+    align-items: center;
+    margin-top:10px;
+    cursor: pointer;
+    color:blue;
+}
+.projectList h1 a svg{
+    margin-left:10px;
 }
 .projectList h3{
     margin: 5px 0px 5px 0px;
