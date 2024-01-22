@@ -19,6 +19,9 @@ const userSchema = new Schema({
             type: String,
             required: true
         }
+    },
+    approved: {
+        type: Boolean,
     }
 })
 module.exports = mongoose.model('StudentProject', userSchema)

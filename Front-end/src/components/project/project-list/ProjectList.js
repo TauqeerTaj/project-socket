@@ -4,7 +4,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import './style.css'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-function ProjectList() {
+function ProjectList({listLoader}) {
     const navigate = useNavigate()
     const {state} = useLocation()
 
@@ -24,8 +24,9 @@ function ProjectList() {
     }
 
     useEffect(()=>{
+        console.log('loader:', listLoader)
         getProjects()
-    },[])
+    },[listLoader])
 
     const clickHandler = (details) => {
         navigate('/project-details', {
@@ -41,30 +42,31 @@ function ProjectList() {
       }
     return (
         <div className='projectList'>
-                        <div className='spinner'>
-                            <ClipLoader
-                                color="green"
-                                loading={loading}
-                                size={50}
-                                aria-label="Loading Spinner"
-                                data-testid="loader"
-                            />
-                        </div>
-                        <ul>
-                            {list?.map(project => (
-                                <li onClick={() => clickHandler(project)}>
-                                    <div>
-                                        <h3>Name:</h3>
-                                        <span>{project.projectName}</span>
-                                    </div>
-                                    <div>
-                                        <h3>Description:</h3>
-                                        <span>{truncate(project.projectDescription, 400)}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                <h1>Projects</h1>
+                <div className='spinner'>
+                    <ClipLoader
+                        color="green"
+                        loading={loading}
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
                 </div>
+                <ul>
+                    {list?.map(project => (
+                        <li onClick={() => clickHandler(project)}>
+                            <div>
+                                <h3>Name:</h3>
+                                <span>{project.projectName}</span>
+                            </div>
+                            <div>
+                                <h3>Description:</h3>
+                                <span>{truncate(project.projectDescription, 400)}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+        </div>
     )
 }
 

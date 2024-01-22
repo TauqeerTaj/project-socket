@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 import socketIo from "socket.io-client";
 import axios from 'axios'
 import ClipLoader from "react-spinners/ClipLoader";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBell } from '@fortawesome/free-solid-svg-icons'
-import Header from '../header/Header';
 import './dashboard.css'
 
 let socket;
@@ -13,14 +10,10 @@ const ENDPOINT = "http://localhost:8080";
 
 function Dashboard() {
     const { state } = useLocation()
-    const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [list, setList] = useState([])
     const [socketId, setSocketId] = useState('')
     const [projectList, setProjectList] = useState([])
-    const [countData, setCountData] = useState([])
-    const [count, setCount] = useState(false)
-    const [showNotification, setShowNotification] = useState(false)
     const [validation, setValidation] = useState(false)
     const [selectedMember, setSelectedMember] = useState("")
     const [project, setProject] = useState({
@@ -32,7 +25,7 @@ function Dashboard() {
         searchCategory: '',
         description: ''
     })
-    const [sendMessage, setSendMessage] = useState([])
+    
     const [category] = useState(
         state?.category === "Supervisor" ? 'student'
             : 'supervisor')
@@ -47,7 +40,6 @@ function Dashboard() {
         })
     }
     useEffect(() => {
-        console.log('state:', state.id)
         setLoading(true)
         axios.get(`http://localhost:8080/auth/${category}s`)
             .then(res => {
@@ -82,17 +74,6 @@ function Dashboard() {
             socket.off();
         }
     }, [])
-    const countHandler = () => {
-        if(countData.length > 0){
-            setSendMessage([...sendMessage, ...countData])
-            setShowNotification(!showNotification)
-        }
-        if(countData.length > 0 || sendMessage.length > 0){
-            setShowNotification(!showNotification)
-        }
-        setCountData([])
-        setCount(false)
-    }
     const submitHandler = async (e) => {
         e.preventDefault()
         if(project.topic === '' || project.category.name === '' || project.description===''){
@@ -139,20 +120,11 @@ function Dashboard() {
         }
 
     }
-    useEffect(() => {
-        socket.on('sendMessage', (data) => {
-            if (data.receiver_id === state?.id) {
-                setCountData([...countData, data]);
-                setCount(true)
-                getProjects()
-            }
-        })
-    }, [countData])
     return (
         <div className='dashboard'>
             {
                 state?.category === "Supervisor" ?
-                <><Header /><Navigate to='/projects' state={{ list: projectList, user: state }} /></> :
+                <Navigate to='/projects' state={{ list: projectList, user: state }} />:
                 <div className='bottom-content'>
                     <div className='form-section'>
                         <form onSubmit={(e) => submitHandler(e)}>
@@ -202,46 +174,6 @@ function Dashboard() {
                     </div>
                 </div>
             }
-            <header>
-                <div>
-                    <img src={state?.profile} className='profile' alt='profile'/>
-                    <h2>
-                        {state?.name}
-                    </h2>
-                </div>
-                <div>
-                    <h3>{state?.category}</h3>
-                </div>
-                <div className='logout'>
-                    {countData.length > 0 && count && <count onClick={countHandler}>{countData.length}</count> }
-                    <FontAwesomeIcon icon={faBell} onClick={countHandler}/>
-                    <span onClick={() => {
-                        localStorage.removeItem('token')
-                        navigate('/')
-                        socket.emit('disconn');
-                        socket.off();
-                    }}>Logout</span>
-                    {
-                        showNotification &&
-                        <div className='notification'>
-                            {
-                                sendMessage?.map(notifi => (
-                                    <div className='content'>
-                                        <div>
-                                            <strong>Project:</strong>
-                                            <span>{notifi.topic}</span>
-                                        </div><div>
-                                            <strong>Sender:</strong>
-                                            <span>{notifi.category.name}</span>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-
-                        </div>
-                    }
-                </div>
-            </header>
         </div>
     )
 }

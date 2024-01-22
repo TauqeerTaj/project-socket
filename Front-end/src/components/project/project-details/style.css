@@ -3,18 +3,25 @@
     padding:5px 0px;
     margin:0px;
 }
-header{
-    position: relative;
+.project-details header{
     padding:0px 20px;
-    border-bottom:1px solid #ccc;
+    display: flex;
+    border:none;
+    background-color: lightskyblue;
 }
-header button{
-    background-color: coral;
+.project-details header button{
     color: #fff;
     border: none;
-    position: absolute;
-    z-index: 999;
-    bottom:5px;
+}
+.project-details header .back{
+    background-color: coral;
+}
+.project-details header .approve{
+    background-color: green;
+    margin-right: 10px;
+}
+.project-details header .reject{
+    background-color: red;
 }
 .content{
     padding: 0px 20px;

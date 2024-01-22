@@ -9,6 +9,7 @@ exports.studentData = async (req, res, next) => {
             projectName: req.body.topic,
             projectDescription: req.body.description,
             category: req.body.category,
+            approved: false
         })
         await projectData.save()
         // socketIO.getIO().emit('project', { projectData: projectData })
@@ -42,7 +43,6 @@ exports.projects = async (req, res, next) => {
 //GET User Projects
 exports.projects = async (req, res, next) => {
     try {
-        console.log('req query:', req.query)
         StudentData.find({
             'category.id': req.query.id
         })
@@ -60,10 +60,30 @@ exports.projects = async (req, res, next) => {
         res.status(500).send({ err: err })
     }
 }
+//Approve Project
+exports.approve = async (req, res, next) => {
+    try {
+        StudentData.findOneAndUpdate(
+            {_id: req.query.approvedId},
+	        { $set: { 'approved': true }}
+          )
+            .then(data => {
+                res.status(200).send({ message: 'Project has been approved!' })
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500
+                }
+                next(err)
+            })
+    }
+    catch (err) {
+        res.status(500).send({ err: err })
+    }
+}
 //Search Category
 exports.category = async (req, res, next) => {
     try {
-        console.log('query search:', req.query)
         const keyword = req.query.name
             ? {
                 $or: [
