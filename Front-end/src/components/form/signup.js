@@ -22,6 +22,7 @@ function Signup() {
             const reader = new FileReader()
             reader.readAsDataURL(e.target.files[0])
             reader.onload = () => {
+            console.log('profile image:', reader.result)
                 setSignupData(v => ({ ...v, [e.target.name]: reader.result }))
             }
         }

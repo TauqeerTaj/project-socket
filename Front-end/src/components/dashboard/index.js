@@ -23,7 +23,8 @@ function Dashboard() {
             name: ''
         },
         searchCategory: '',
-        description: ''
+        description: '',
+        file: ''
     })
     
     const [category] = useState(
@@ -97,7 +98,8 @@ function Dashboard() {
                 id: ''
             },
             searchCategory: '',
-            description: ''
+            description: '',
+            file: ''
 
         })
     }
@@ -113,6 +115,13 @@ function Dashboard() {
 
     }
     const changeHandler = async (e) => {
+        if (e.target.name === 'file') {
+            const reader = new FileReader()
+            reader.readAsDataURL(e.target.files[0])
+            reader.onload = () => {
+            setProject(v => ({ ...v, [e.target.name]: reader.result }))
+            }
+        }
         setProject(project => ({ ...project, [e.target.name]: e.target.value }))
         if (e.target.name === 'searchCategory') {
             const searchResult = await axios.get(`http://localhost:8080/search/category?name=${e.target.value}`)
@@ -142,6 +151,9 @@ function Dashboard() {
                                 <label>Description</label>
                                 <textarea name='description' onChange={changeHandler} value={project.description}/>
                                 {validation && project.description === '' && <error>Please enter project description</error>}
+                            </div>
+                            <div>
+                                <input type='file' accept='pdf' name='file' onChange={changeHandler}/>
                             </div>
                             <button type='submit' onClick={(e) => submitHandler(e)}>Send</button>
                         </form>

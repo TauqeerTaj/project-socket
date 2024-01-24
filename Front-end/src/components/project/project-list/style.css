@@ -29,7 +29,8 @@
 }
 .projectList h1{
     text-align: center;
-    background-color: lightskyblue;
+    background-color: #008CBA;
+    color:#fff;
     padding: 5px 20px;
 }
 .projectList h1 a{
@@ -39,7 +40,7 @@
     align-items: center;
     margin-top:10px;
     cursor: pointer;
-    color:blue;
+    color:#fff;
 }
 .projectList h1 a svg{
     margin-left:10px;
