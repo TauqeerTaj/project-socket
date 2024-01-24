@@ -20,6 +20,9 @@ const userSchema = new Schema({
             required: true
         }
     },
+    file: {
+        type: String
+    },
     approved: {
         type: Boolean,
     }

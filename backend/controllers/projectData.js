@@ -9,6 +9,7 @@ exports.studentData = async (req, res, next) => {
             projectName: req.body.topic,
             projectDescription: req.body.description,
             category: req.body.category,
+            file: req.body.file,
             approved: false
         })
         await projectData.save()
