@@ -6,7 +6,6 @@ export const getProjectList = async (id) => {
   await axios
     .get(`http://localhost:8080/project/projects?id=${id}`)
     .then((res) => {
-      console.log("refactor response:", res);
       data = [...res.data.list];
     })
     .catch((err) => {

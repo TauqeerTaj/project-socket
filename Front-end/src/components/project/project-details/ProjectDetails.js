@@ -25,7 +25,6 @@ function ProjectDetails() {
 
   const approveProject = async (id) => {
     const data = await approve(id);
-    console.log("approve:", data);
     if (data) {
       toast.success(data);
       setTimeout(() => {
@@ -39,7 +38,6 @@ function ProjectDetails() {
   };
   const deleteProject = async (id) => {
     const data = await Delete(id);
-    console.log("delete:", data);
     toast.success("Project has been rejected!");
     setTimeout(() => {
       navigate("/projects", {

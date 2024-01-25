@@ -19,7 +19,6 @@ function ProjectList({ listLoader }) {
       setLoading(true);
       setToggleApproved(false);
       const data = await getProjectList(state?.user?.id);
-      console.log("data refactor:", data);
       if (data.length) {
         setLoading(false);
         setList([...data]);

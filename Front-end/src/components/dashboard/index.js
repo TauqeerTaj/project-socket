@@ -66,7 +66,6 @@ function Dashboard() {
     //     })
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
     socket.on("connect", () => {
-      console.log("socket id:", socket.id, state?.id);
       setSocketId(socket.id);
     });
     socket.emit("joined", { user: state?.id });
