@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { approve, Delete } from "../../../api/project";
@@ -24,22 +26,26 @@ function ProjectDetails() {
   const approveProject = async (id) => {
     const data = await approve(id);
     if (data) {
-      navigate("/projects", {
-        state: {
-          user: { ...state.user },
-        },
-      });
+      toast.success(data);
+      setTimeout(() => {
+        navigate("/projects", {
+          state: {
+            user: { ...state.user },
+          },
+        });
+      }, 1000);
     }
   };
   const deleteProject = async (id) => {
     const data = await Delete(id);
-    if (data.message) {
+    toast.success("Project has been rejected!");
+    setTimeout(() => {
       navigate("/projects", {
         state: {
           user: { ...state.user },
         },
       });
-    }
+    }, 1000);
   };
 
   const attachementHandler = () => {
@@ -52,6 +58,7 @@ function ProjectDetails() {
         state.approved ? "project-details approved" : "project-details"
       }
     >
+      <ToastContainer autoClose={1000} />
       <header>
         <button onClick={buttonClickHandler} className="back">
           Back
