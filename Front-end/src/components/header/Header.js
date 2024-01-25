@@ -17,7 +17,12 @@ const Header = ({ listHandler }) => {
   const [sendMessage, setSendMessage] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
   const [count, setCount] = useState(false);
-  const [headerInfo] = useState(state?.user ?? state);
+  const [headerInfo, setHeaderInfo] = useState(null);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("headerData"));
+    setHeaderInfo(data);
+  }, []);
 
   const countHandler = () => {
     if (countData.length > 0) {
@@ -69,6 +74,7 @@ const Header = ({ listHandler }) => {
           <span
             onClick={() => {
               localStorage.removeItem("token");
+              localStorage.removeItem("headerData");
               navigate("/");
               socket.emit("disconn");
               socket.off();
