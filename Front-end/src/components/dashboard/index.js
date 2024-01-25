@@ -35,7 +35,7 @@ function Dashboard() {
 
   const getProjects = () => {
     axios
-      .get(`http://localhost:8080/project/projects?id=${state.id}`)
+      .get(`http://localhost:8080/project/projects?id=${state?.id}`)
       .then((res) => {
         setLoading(false);
         setProjectList([...res.data.list]);
