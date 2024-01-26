@@ -5,7 +5,10 @@ import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import "./dashboard.css";
+import Chat from "../chat";
 
 let socket;
 const ENDPOINT = "http://localhost:8080";
@@ -32,18 +35,19 @@ function Dashboard() {
   const [category] = useState(
     state?.category === "Supervisor" ? "student" : "supervisor"
   );
+  const [selectedChat, setSelectedChat] = useState("");
 
-  const getProjects = () => {
-    axios
-      .get(`http://localhost:8080/project/projects?id=${state?.id}`)
-      .then((res) => {
-        setLoading(false);
-        setProjectList([...res.data.list]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getProjects = () => {
+  //   axios
+  //     .get(`http://localhost:8080/project/projects?id=${state?.id}`)
+  //     .then((res) => {
+  //       setLoading(false);
+  //       setProjectList([...res.data.list]);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   useEffect(() => {
     setLoading(true);
     axios
@@ -55,15 +59,7 @@ function Dashboard() {
       .catch((err) => {
         console.log(err);
       });
-    getProjects();
-    // axios.get(`http://localhost:8080/project/projects`)
-    //     .then(res => {
-    //         setLoading(false)
-    //         setProjectList([...res.data.list])
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
+    // getProjects();
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
     socket.on("connect", () => {
       setSocketId(socket.id);
@@ -146,6 +142,9 @@ function Dashboard() {
       setList([...searchResult.data]);
     }
   };
+  const chatHandler = (chatMember) => {
+    setSelectedChat(chatMember);
+  };
   return (
     <div className="dashboard">
       <ToastContainer />
@@ -223,16 +222,21 @@ function Dashboard() {
               />
               {list.map((item, i) => {
                 return (
-                  <li
-                    key={i}
-                    onClick={() =>
-                      memberHandler(item.firstName + item.lastName, item._id)
-                    }
-                  >
-                    <div>
+                  <li key={i}>
+                    <div
+                      onClick={() =>
+                        memberHandler(item.firstName + item.lastName, item._id)
+                      }
+                    >
                       {item.firstName}-{item.lastName}
                     </div>
                     <div>
+                      <FontAwesomeIcon
+                        icon={faCommentDots}
+                        onClick={() =>
+                          chatHandler(item.firstName + item.lastName)
+                        }
+                      />
                       <img src={item.profileImage} alt="profile" />
                     </div>
                   </li>
@@ -240,6 +244,7 @@ function Dashboard() {
               })}
             </ul>
           </div>
+          {selectedChat && <Chat name={selectedChat} closeChat={chatHandler} />}
         </div>
       )}
     </div>

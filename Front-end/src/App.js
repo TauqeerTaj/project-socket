@@ -1,10 +1,10 @@
-import Routing from './router';
-import './App.css';
+import Routing from "./router";
+import "./App.css";
 
 function App() {
   return (
     <>
-    <Routing/>
+      <Routing />
     </>
   );
 }

@@ -1,0 +1,30 @@
+.chat {
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+  width: 350px;
+  background-color: #fff;
+  border: 1px solid #008cba;
+}
+.chat header {
+  background-color: #008cba;
+  color: #fff;
+  padding: 3px 5px;
+}
+.chat header h4 {
+  padding: 0px;
+  margin: 0px;
+}
+.chat header svg {
+  cursor: pointer;
+}
+.chat .message-box {
+  height: 300px;
+}
+.chat input {
+  width: -webkit-fill-available;
+  outline: none;
+  height: 25px;
+  border: none;
+  border-top: 1px solid #008cba;
+}

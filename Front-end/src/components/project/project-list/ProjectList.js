@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faC,
+  faCommentDots,
+} from "@fortawesome/free-solid-svg-icons";
 import { getProjectList, getApprovalList } from "../../../api/project";
 import "./style.css";
 
@@ -88,6 +92,7 @@ function ProjectList({ listLoader }) {
               <h3>Description:</h3>
               <span>{truncate(project.projectDescription, 400)}</span>
             </div>
+            <FontAwesomeIcon icon={faCommentDots} />
           </li>
         ))}
       </ul>
