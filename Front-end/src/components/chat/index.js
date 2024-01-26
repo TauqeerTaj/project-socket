@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 
 function Chat({ name, closeChat }) {
+  const [textMessage, setTextMessage] = useState("");
+
+  const changeHandler = (e) => {
+    setTextMessage(e.target.value);
+  };
+  const submitHandler = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="chat">
       <header>
@@ -11,7 +20,10 @@ function Chat({ name, closeChat }) {
         <FontAwesomeIcon icon={faClose} onClick={() => closeChat("")} />
       </header>
       <div className="message-box"></div>
-      <input type="text" />
+      <form onSubmit={submitHandler}>
+        <input type="text" value={textMessage} onChange={changeHandler} />
+        <FontAwesomeIcon icon={faPaperPlane} onClick={() => submitHandler} />
+      </form>
     </div>
   );
 }
