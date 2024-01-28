@@ -21,7 +21,10 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("headerData"));
-    setHeaderInfo(data);
+    console.log("header==>:", data);
+    if (data) {
+      setHeaderInfo(data);
+    }
   }, []);
 
   const countHandler = () => {

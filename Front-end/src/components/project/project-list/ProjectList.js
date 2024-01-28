@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faC,
-  faCommentDots,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import { UseDispatch, useDispatch } from "react-redux";
 import { getProjectList, getApprovalList } from "../../../api/project";
 import "./style.css";
+import { chatBoxHandler } from "../../../store/reducers/chatReducer";
 
 function ProjectList({ listLoader }) {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const dispatch = useDispatch();
 
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,6 +22,7 @@ function ProjectList({ listLoader }) {
       setLoading(true);
       setToggleApproved(false);
       const data = await getProjectList(state?.user?.id);
+      console.log("projects:", data);
       if (data.length) {
         setLoading(false);
         setList([...data]);
@@ -57,9 +57,17 @@ function ProjectList({ listLoader }) {
       },
     });
   };
+
   const truncate = (str, maxlength) => {
     return str.length > maxlength ? str.slice(0, maxlength - 1) + "…" : str;
   };
+
+  const openChat = (e, name) => {
+    e.stopPropagation();
+    dispatch(chatBoxHandler(name));
+    console.log("clicked...");
+  };
+
   return (
     <div className="projectList">
       <h1>
@@ -92,7 +100,10 @@ function ProjectList({ listLoader }) {
               <h3>Description:</h3>
               <span>{truncate(project.projectDescription, 400)}</span>
             </div>
-            <FontAwesomeIcon icon={faCommentDots} />
+            <FontAwesomeIcon
+              icon={faCommentDots}
+              onClick={async (e) => await openChat(e, project.category.name)}
+            />
           </li>
         ))}
       </ul>

@@ -5,6 +5,7 @@
   width: 350px;
   background-color: #fff;
   border: 1px solid #008cba;
+  z-index: 1200;
 }
 .chat header {
   background-color: #008cba;

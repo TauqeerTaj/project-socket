@@ -4,17 +4,20 @@ import socketIo from "socket.io-client";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import "./dashboard.css";
-import Chat from "../chat";
+import { chatBoxHandler } from "../../store/reducers/chatReducer";
 
 let socket;
 const ENDPOINT = "http://localhost:8080";
 
 function Dashboard() {
   const { state } = useLocation();
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
   const [socketId, setSocketId] = useState("");
@@ -35,7 +38,6 @@ function Dashboard() {
   const [category] = useState(
     state?.category === "Supervisor" ? "student" : "supervisor"
   );
-  const [selectedChat, setSelectedChat] = useState("");
 
   // const getProjects = () => {
   //   axios
@@ -142,9 +144,6 @@ function Dashboard() {
       setList([...searchResult.data]);
     }
   };
-  const chatHandler = (chatMember) => {
-    setSelectedChat(chatMember);
-  };
   return (
     <div className="dashboard">
       <ToastContainer />
@@ -234,7 +233,9 @@ function Dashboard() {
                       <FontAwesomeIcon
                         icon={faCommentDots}
                         onClick={() =>
-                          chatHandler(item.firstName + item.lastName)
+                          dispatch(
+                            chatBoxHandler(item.firstName + item.lastName)
+                          )
                         }
                       />
                       <img src={item.profileImage} alt="profile" />
@@ -244,7 +245,6 @@ function Dashboard() {
               })}
             </ul>
           </div>
-          {selectedChat && <Chat name={selectedChat} closeChat={chatHandler} />}
         </div>
       )}
     </div>
