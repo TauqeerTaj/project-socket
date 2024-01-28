@@ -4,11 +4,13 @@ const chatReducer = createSlice({
   name: "chatReducer",
   initialState: {
     chatUser: "",
+    chatUserId: "",
   },
 
   reducers: {
     chatBoxHandler: (state, action) => {
-      state.chatUser = action.payload;
+      state.chatUser = action.payload.name;
+      state.chatUserId = action.payload.id;
     },
   },
 });

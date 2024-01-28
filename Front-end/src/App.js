@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 
 function App() {
   const state = useSelector((state) => state.chat);
-  console.log("redux state:", state);
   return (
     <>
       <Routing />

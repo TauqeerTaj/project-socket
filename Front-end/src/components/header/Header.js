@@ -21,7 +21,6 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("headerData"));
-    console.log("header==>:", data);
     if (data) {
       setHeaderInfo(data);
     }
@@ -42,7 +41,7 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      if (data.receiver_id === headerInfo?.id) {
+      if (data.receiver_id === state?.id) {
         setCountData([...countData, data]);
         setCount(true);
       }
@@ -73,7 +72,7 @@ const Header = ({ listHandler }) => {
           {countData.length > 0 && count && (
             <count onClick={countHandler}>{countData.length}</count>
           )}
-          <FontAwesomeIcon icon={faBell} onClick={countHandler} />
+          <FontAwesomeIcon icon={faBell} onClick={() => countHandler()} />
           <span
             onClick={() => {
               localStorage.removeItem("token");

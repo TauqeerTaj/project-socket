@@ -22,7 +22,6 @@ function ProjectList({ listLoader }) {
       setLoading(true);
       setToggleApproved(false);
       const data = await getProjectList(state?.user?.id);
-      console.log("projects:", data);
       if (data.length) {
         setLoading(false);
         setList([...data]);
@@ -65,7 +64,6 @@ function ProjectList({ listLoader }) {
   const openChat = (e, name) => {
     e.stopPropagation();
     dispatch(chatBoxHandler(name));
-    console.log("clicked...");
   };
 
   return (

@@ -8,8 +8,8 @@ import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import "./dashboard.css";
 import { chatBoxHandler } from "../../store/reducers/chatReducer";
+import "./dashboard.css";
 
 let socket;
 const ENDPOINT = "http://localhost:8080";
@@ -234,7 +234,10 @@ function Dashboard() {
                         icon={faCommentDots}
                         onClick={() =>
                           dispatch(
-                            chatBoxHandler(item.firstName + item.lastName)
+                            chatBoxHandler({
+                              name: item.firstName + item.lastName,
+                              id: item._id,
+                            })
                           )
                         }
                       />
