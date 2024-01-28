@@ -17,9 +17,9 @@ header .logout {
 header .logout svg {
   margin-right: 5px;
 }
-header .logout count{
+header .logout count {
   background-color: red;
-  color:#fff;
+  color: #fff;
   border-radius: 100%;
   position: absolute;
   z-index: 999;
@@ -36,8 +36,8 @@ header div {
   display: flex;
   align-items: center;
 }
-.notification{
-  border:1px solid lightcoral;
+.notification {
+  border: 1px solid lightcoral;
   position: absolute;
   right: 0;
   top: 45px;
@@ -53,18 +53,18 @@ header div {
 .notification .content {
   flex-direction: column;
   align-items: flex-start;
-  border-bottom:1px solid lightcoral;
-  width: -webkit-fill-available;;
-  margin-bottom:5px;
+  border-bottom: 1px solid lightcoral;
+  width: -webkit-fill-available;
+  margin-bottom: 5px;
   padding: 5px;
 }
-.notification .content:last-child{
-  border:none
+.notification .content:last-child {
+  border: none;
 }
-.notification .content div{
-  margin-bottom:5px; 
+.notification .content div {
+  margin-bottom: 5px;
 }
-.notification .content div:last-child{
+.notification .content div:last-child {
   margin: 0px;
 }
 .dashboard ul {
@@ -89,8 +89,9 @@ header div {
 }
 .dashboard ul li div:nth-child(2) {
   text-align: right;
-}.dashboard ul li:hover{
-  color:coral
+}
+.dashboard ul li:hover {
+  color: coral;
 }
 .bottom-content {
   display: flex;
@@ -108,11 +109,17 @@ header div {
 .bottom-content .right-content {
   width: 49%;
 }
-.bottom-content .right-content .search input{
-width:100%;
-height:28px;
-margin-top:5px;
-margin-bottom:10px;
+.bottom-content .right-content .search input {
+  width: 100%;
+  height: 28px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.bottom-content .right-content svg {
+  font-size: 20px;
+  cursor: pointer;
+  color: #008cba;
+  margin-right: 20px;
 }
 .bottom-content form div {
   width: 100%;
@@ -127,6 +134,6 @@ margin-bottom:10px;
   border: none;
   cursor: pointer;
 }
-error{
-  color: red
+error {
+  color: red;
 }
