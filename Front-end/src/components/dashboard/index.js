@@ -77,6 +77,7 @@ function Dashboard() {
     };
   }, []);
   const submitHandler = async (e) => {
+    console.log('sending state:', state)
     e.preventDefault();
     if (
       project.topic === "" ||
@@ -91,6 +92,7 @@ function Dashboard() {
       category: {
         name: state.name,
         id: selectedMember,
+        sender_id: state.id
       },
     };
     try {

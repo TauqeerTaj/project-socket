@@ -41,7 +41,8 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      if (data.receiver_id === state?.id) {
+      console.log('send message:', state.id, headerInfo)
+      if (data.receiver_id === state?.id ?? headerInfo?.id) {
         setCountData([...countData, data]);
         setCount(true);
       }

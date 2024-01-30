@@ -3,7 +3,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import { UseDispatch, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getProjectList, getApprovalList } from "../../../api/project";
 import "./style.css";
 import { chatBoxHandler } from "../../../store/reducers/chatReducer";
@@ -22,6 +22,7 @@ function ProjectList({ listLoader }) {
       setLoading(true);
       setToggleApproved(false);
       const data = await getProjectList(state?.user?.id);
+      console.log("projects:", data)
       if (data.length) {
         setLoading(false);
         setList([...data]);
@@ -61,9 +62,13 @@ function ProjectList({ listLoader }) {
     return str.length > maxlength ? str.slice(0, maxlength - 1) + "…" : str;
   };
 
-  const openChat = (e, name) => {
+  const openChat = (e, name, id) => {
     e.stopPropagation();
-    dispatch(chatBoxHandler(name));
+    console.log("open chat:", name, id)
+    dispatch(chatBoxHandler({
+      name,
+      id
+    }));
   };
 
   return (
@@ -100,7 +105,7 @@ function ProjectList({ listLoader }) {
             </div>
             <FontAwesomeIcon
               icon={faCommentDots}
-              onClick={async (e) => await openChat(e, project.category.name)}
+              onClick={async (e) => await openChat(e, project.category.name, project.category.sender_id)}
             />
           </li>
         ))}
