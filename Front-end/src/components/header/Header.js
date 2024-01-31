@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
 import socketIo from "socket.io-client";
+import { chatBoxHandler } from "../../store/reducers/chatReducer";
 import "./style.css";
 
 let socket;
@@ -11,6 +13,7 @@ const ENDPOINT = "http://localhost:8080";
 const Header = ({ listHandler }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   socket = socketIo(ENDPOINT, { transports: ["websocket"] });
 
   const [countData, setCountData] = useState([]);
@@ -41,7 +44,7 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      console.log('send message:', state.id, headerInfo)
+      console.log("check message:",data)
       if (data.receiver_id === state?.id ?? headerInfo?.id) {
         setCountData([...countData, data]);
         setCount(true);
@@ -90,10 +93,13 @@ const Header = ({ listHandler }) => {
               {sendMessage?.map((notifi) => (
                 <div
                   className="content"
-                  onClick={() => moveToDetailsPage(notifi)}
+                  onClick={() => notifi.projectDescription ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
+                    name: notifi.category.name,
+                    id: notifi.category.sender_id}))
+                  }
                 >
                   <div>
-                    <strong>Project:</strong>
+                    <strong>{notifi.projectDescription? 'Project:' : 'Message:'}</strong>
                     <span>{notifi.topic}</span>
                   </div>
                   <div>

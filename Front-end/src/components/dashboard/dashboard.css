@@ -43,7 +43,7 @@ header div {
   top: 45px;
   border-radius: 10px;
   flex-direction: column;
-  z-index: 999;
+  z-index: 1200;
   width: 300px;
   max-height: 100vh;
   overflow: scroll;
