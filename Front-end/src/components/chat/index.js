@@ -4,6 +4,7 @@ import { faClose, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import socketIo from "socket.io-client";
 import { chatBoxHandler } from "../../store/reducers/chatReducer";
+import { saveMessages } from "../../api/messages";
 import "./style.css";
 
 let socket;
@@ -21,7 +22,6 @@ function Chat() {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      console.log("check message:", data)
       if (data.receiver_id === headerData?.id) {
         setChatBoxMsg([...chatBoxMsg, data]);
       }
@@ -58,17 +58,21 @@ function Chat() {
     }])
     setTextMessage("");
   };
+  const closeChat = async() => {
+    console.log("close messages:", chatBoxMsg)
+    dispatch(chatBoxHandler(""))
+    await saveMessages(chatBoxMsg)
+  }
   return (
     <div className="chat">
       <header>
         <h4>{globalState.chatUser}</h4>
         <FontAwesomeIcon
           icon={faClose}
-          onClick={() => dispatch(chatBoxHandler(""))}
+          onClick={() => closeChat()}
         />
       </header>
       <div className="message-box">
-        {console.log("jsx:", chatBoxMsg)}
         {chatBoxMsg?.map(msg => (<div className={msg.receiver_id === headerData.id ? 'rightMsg' : 'msg'}>
           <span key={msg.id}>{msg.text ?? msg.topic}</span>
           <div ref={bottomEl}></div>

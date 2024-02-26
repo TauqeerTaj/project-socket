@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
 const projectRoutes = require("./routes/projectData");
+const messageRoutes = require("./routes/messages")
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use("/project", projectRoutes);
 app.use("/search", projectRoutes);
+app.use("/messages", messageRoutes);
 
 const http = require("http").Server(app);
 const cors = require("cors");

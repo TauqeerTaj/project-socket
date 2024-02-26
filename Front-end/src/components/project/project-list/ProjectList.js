@@ -64,7 +64,6 @@ function ProjectList({ listLoader }) {
 
   const openChat = (e, name, id) => {
     e.stopPropagation();
-    console.log("open chat:", name, id)
     dispatch(chatBoxHandler({
       name,
       id

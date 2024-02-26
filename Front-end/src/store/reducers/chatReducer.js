@@ -9,7 +9,6 @@ const chatReducer = createSlice({
 
   reducers: {
     chatBoxHandler: (state, action) => {
-      console.log('action payload:', action.payload)
       state.chatUser = action?.payload?.name;
       state.chatUserId = action.payload.id;
     },
