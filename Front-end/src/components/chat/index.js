@@ -4,7 +4,7 @@ import { faClose, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import socketIo from "socket.io-client";
 import { chatBoxHandler } from "../../store/reducers/chatReducer";
-import { saveMessages } from "../../api/messages";
+import { saveMessages, getMessages } from "../../api/messages";
 import "./style.css";
 
 let socket;
@@ -20,6 +20,10 @@ function Chat() {
   const headerData = JSON.parse(localStorage.getItem("headerData"));
   const bottomEl = useRef(null);
 
+  useEffect(()=> {
+    getList()
+  }, [])
+
   useEffect(() => {
     socket.on("sendMessage", (data) => {
       if (data.receiver_id === headerData?.id) {
@@ -28,6 +32,16 @@ function Chat() {
     });
     scrollToBottom()
   }, [chatBoxMsg]);
+
+  const getList = async () => {
+    try {
+      const data = await getMessages();
+      console.log("list:", data)
+      setChatBoxMsg([...chatBoxMsg, ...data.list])
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const scrollToBottom = () => {
     bottomEl?.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,7 +73,6 @@ function Chat() {
     setTextMessage("");
   };
   const closeChat = async() => {
-    console.log("close messages:", chatBoxMsg)
     dispatch(chatBoxHandler(""))
     await saveMessages(chatBoxMsg)
   }
@@ -74,7 +87,7 @@ function Chat() {
       </header>
       <div className="message-box">
         {chatBoxMsg?.map(msg => (<div className={msg.receiver_id === headerData.id ? 'rightMsg' : 'msg'}>
-          <span key={msg.id}>{msg.text ?? msg.topic}</span>
+          <span key={msg.id}>{msg.text ?? msg.topic ?? msg.message}</span>
           <div ref={bottomEl}></div>
           </div>))}
       </div>

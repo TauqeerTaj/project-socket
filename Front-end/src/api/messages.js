@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//Approve Project
+//Save Messages
 export const saveMessages = async (message) => {
     let data;
     await axios
@@ -13,3 +13,17 @@ export const saveMessages = async (message) => {
       });
     return data;
   };
+
+  //GET Messages
+export const getMessages = async () => {
+  let data;
+  await axios
+    .get(`http://localhost:8080/messages/getMessages`)
+    .then((res) => {
+      data = res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  return data;
+};
