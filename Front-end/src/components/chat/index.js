@@ -13,6 +13,7 @@ const ENDPOINT = "http://localhost:8080";
 function Chat() {
   const [textMessage, setTextMessage] = useState("");
   const [chatBoxMsg, setChatBoxMsg] = useState([])
+  const [getMsgs, setGetMsgs] = useState([])
 
   socket = socketIo(ENDPOINT, { transports: ["websocket"] });
   const globalState = useSelector((state) => state.chat);
@@ -21,7 +22,13 @@ function Chat() {
   const bottomEl = useRef(null);
 
   useEffect(()=> {
-    getList()
+    async function fetchData() {
+        let data = await getMessages();
+        console.log('useEffect data:', data)
+        setChatBoxMsg([...chatBoxMsg, ...data.list])
+        setGetMsgs([...data.list])
+    }
+    fetchData()
   }, [])
 
   useEffect(() => {
@@ -32,16 +39,6 @@ function Chat() {
     });
     scrollToBottom()
   }, [chatBoxMsg]);
-
-  const getList = async () => {
-    try {
-      const data = await getMessages();
-      console.log("list:", data)
-      setChatBoxMsg([...chatBoxMsg, ...data.list])
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const scrollToBottom = () => {
     bottomEl?.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,7 +71,18 @@ function Chat() {
   };
   const closeChat = async() => {
     dispatch(chatBoxHandler(""))
-    await saveMessages(chatBoxMsg)
+    console.log('chat check:', chatBoxMsg)
+    console.log('getList:', getMsgs)
+    const filteredMsgs = []
+    if(getMsgs.length){
+      console.log("mmssss:", getMsgs)
+      const results = chatBoxMsg.filter(({ _id: id1 }) => !getMsgs.some(({ _id: id2 }) => id2 === id1));
+      filteredMsgs.push(...results)
+    }else{
+      filteredMsgs.push(...chatBoxMsg)
+    }
+    console.log("save api:", filteredMsgs)
+    await saveMessages(filteredMsgs)
   }
   return (
     <div className="chat">
@@ -86,7 +94,7 @@ function Chat() {
         />
       </header>
       <div className="message-box">
-        {chatBoxMsg?.map(msg => (<div className={msg.receiver_id === headerData.id ? 'rightMsg' : 'msg'}>
+        {chatBoxMsg?.map(msg => (<div className={(msg.receiver_id === headerData.id || msg.id !== headerData.id) ? 'rightMsg' : 'msg'}>
           <span key={msg.id}>{msg.text ?? msg.topic ?? msg.message}</span>
           <div ref={bottomEl}></div>
           </div>))}
