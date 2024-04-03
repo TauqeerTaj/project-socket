@@ -24,6 +24,7 @@ function Chat() {
   useEffect(()=> {
     async function fetchData() {
         let data = await getMessages();
+        data.list.sort(function(a, b){return a.date-b.date})
         console.log('useEffect data:', data)
         setChatBoxMsg([...chatBoxMsg, ...data.list])
         setGetMsgs([...data.list])
@@ -33,6 +34,7 @@ function Chat() {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
+      console.log('data check:', data)
       if (data.receiver_id === headerData?.id) {
         setChatBoxMsg([...chatBoxMsg, data]);
       }
@@ -59,23 +61,24 @@ function Chat() {
             sender_id: headerData?.id
           },
           receiver_id: globalState.chatUserId,
+          date: Date.now()
         },
         id: "dummy id",
       });
     }
     setChatBoxMsg([...chatBoxMsg, {
       text: textMessage,
-      id: headerData.id
+      id: headerData.id,
+      date: Date.now()
     }])
     setTextMessage("");
   };
   const closeChat = async() => {
     dispatch(chatBoxHandler(""))
-    console.log('chat check:', chatBoxMsg)
+    console.log("chatbox:", chatBoxMsg)
     console.log('getList:', getMsgs)
     const filteredMsgs = []
     if(getMsgs.length){
-      console.log("mmssss:", getMsgs)
       const results = chatBoxMsg.filter(({ _id: id1 }) => !getMsgs.some(({ _id: id2 }) => id2 === id1));
       filteredMsgs.push(...results)
     }else{

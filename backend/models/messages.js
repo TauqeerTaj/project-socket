@@ -11,7 +11,10 @@ const userSchema = new Schema([
         },
         message: {
             type: String,
+        },
+        date: {
+            type: String,
         }
     }
-])
+],{ timestamps: true })
 module.exports = mongoose.model('Message', userSchema)

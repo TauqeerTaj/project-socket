@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", ({ message, id }) => {
-    console.log("messageid:", id);
+    console.log("messageid:", message);
     // io.to(id).emit('sendMessage',message);
     socket.broadcast.emit("sendMessage", message);
   });

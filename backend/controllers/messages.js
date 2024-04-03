@@ -9,7 +9,7 @@ exports.messages = async (req, res, next) => {
             .then(data => {
                 console.log("save data check:", data)
                 if(data.length < 1){
-                    let messagesData = new Messages({id: item.id ?? item.category.sender_id, receiver_id: item.receiver_id, message: item.text ?? item.topic});
+                    let messagesData = new Messages({id: item.id ?? item.category.sender_id, receiver_id: item.receiver_id, message: item.text ?? item.topic, date: item.date});
                     messagesData.save();
                 }
             })
