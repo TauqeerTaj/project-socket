@@ -99,7 +99,8 @@ const Header = ({ listHandler }) => {
                   }
                 >
                   <div>
-                    <strong>{notifi.projectDescription? 'Project:' : 'Message:'}</strong>
+                    {console.log("notifi:", notifi)}
+                    <strong>{notifi.description? 'Project:' : 'Message:'}</strong>
                     <span>{notifi.topic}</span>
                   </div>
                   <div>
