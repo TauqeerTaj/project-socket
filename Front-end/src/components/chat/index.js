@@ -25,7 +25,6 @@ function Chat() {
     async function fetchData() {
         let data = await getMessages();
         data.list.sort(function(a, b){return a.date-b.date})
-        console.log('useEffect data:', data)
         setChatBoxMsg([...chatBoxMsg, ...data.list])
         setGetMsgs([...data.list])
     }
@@ -34,7 +33,6 @@ function Chat() {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      console.log('data check:', data)
       if (data.receiver_id === headerData?.id) {
         setChatBoxMsg([...chatBoxMsg, data]);
       }
@@ -75,8 +73,6 @@ function Chat() {
   };
   const closeChat = async() => {
     dispatch(chatBoxHandler(""))
-    console.log("chatbox:", chatBoxMsg)
-    console.log('getList:', getMsgs)
     const filteredMsgs = []
     if(getMsgs.length){
       const results = chatBoxMsg.filter(({ _id: id1 }) => !getMsgs.some(({ _id: id2 }) => id2 === id1));
@@ -84,7 +80,6 @@ function Chat() {
     }else{
       filteredMsgs.push(...chatBoxMsg)
     }
-    console.log("save api:", filteredMsgs)
     await saveMessages(filteredMsgs)
   }
   return (

@@ -75,7 +75,7 @@ function ProjectList({ listLoader }) {
       <h1>
         Projects{" "}
         <a onClick={!toggleApproved ? getApprovedProjects : getProjects}>
-          {!toggleApproved ? "Approved projects" : "Projects"}
+          {!toggleApproved ? "Approved projects" : "All projects"}
           <FontAwesomeIcon icon={faArrowRight} />
         </a>
       </h1>

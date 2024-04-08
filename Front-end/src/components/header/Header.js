@@ -93,7 +93,7 @@ const Header = ({ listHandler }) => {
               {sendMessage?.map((notifi) => (
                 <div
                   className="content"
-                  onClick={() => notifi.projectDescription ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
+                  onClick={() => notifi.description ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
                     name: notifi.category.name,
                     id: notifi.category.sender_id}))
                   }
