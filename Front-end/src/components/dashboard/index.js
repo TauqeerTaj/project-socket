@@ -5,10 +5,10 @@ import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { chatBoxHandler } from "../../store/reducers/chatReducer";
+import "react-toastify/dist/ReactToastify.css";
 import "./dashboard.css";
 
 let socket;

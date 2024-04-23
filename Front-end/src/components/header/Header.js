@@ -35,7 +35,7 @@ const Header = ({ listHandler }) => {
       setSendMessage([...sendMessage, ...countData]);
       setShowNotification(!showNotification);
     }
-    if (sendMessage.length > 0) {
+    if (sendMessage?.length > 0) {
       setShowNotification(!showNotification);
     }
     setCountData([]);
@@ -54,6 +54,9 @@ const Header = ({ listHandler }) => {
 
   const moveToDetailsPage = (details) => {
     setShowNotification(!showNotification);
+    // console.log("sendMessage:", sendMessage)
+    // const filteredProjects = sendMessage.filter(item => item.topic !== details.topic)
+    // setSendMessage([...filteredProjects])
     navigate("/project-details", {
       state: {
         ...details,
@@ -84,6 +87,7 @@ const Header = ({ listHandler }) => {
               navigate("/");
               socket.emit("disconn");
               socket.off();
+              dispatch(chatBoxHandler(""))
             }}
           >
             Logout
@@ -93,9 +97,12 @@ const Header = ({ listHandler }) => {
               {sendMessage?.map((notifi) => (
                 <div
                   className="content"
-                  onClick={() => notifi.description ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
-                    name: notifi.category.name,
-                    id: notifi.category.sender_id}))
+                  onClick={() => {
+                    notifi.description ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
+                      name: notifi.category.name,
+                      id: notifi.category.sender_id}))
+                      setShowNotification(!showNotification)
+                  }
                   }
                 >
                   <div>

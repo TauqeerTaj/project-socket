@@ -24,11 +24,14 @@ function Chat() {
   useEffect(()=> {
     async function fetchData() {
         let data = await getMessages();
+        console.log('working...data:', data)
         data.list.sort(function(a, b){return a.date-b.date})
-        setChatBoxMsg([...chatBoxMsg, ...data.list])
+        await setChatBoxMsg([...chatBoxMsg, ...data.list])
         setGetMsgs([...data.list])
+
     }
     fetchData()
+    console.log('working...')
   }, [])
 
   useEffect(() => {
