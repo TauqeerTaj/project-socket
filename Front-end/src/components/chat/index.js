@@ -21,18 +21,26 @@ function Chat() {
   const headerData = JSON.parse(localStorage.getItem("headerData"));
   const bottomEl = useRef(null);
 
-  useEffect(()=> {
+  useEffect(() => {
     async function fetchData() {
-        let data = await getMessages();
-        console.log('working...data:', data)
-        data.list.sort(function(a, b){return a.date-b.date})
-        await setChatBoxMsg([...chatBoxMsg, ...data.list])
-        setGetMsgs([...data.list])
+      let data = await getMessages();
+      data.list.sort(function (a, b) { return a.date - b.date })
+      const a = globalState.notifiMessage;
+      const b = data.list
+      // const filterNotifiMsg = a.filter(({ date: id1 }) => !b.some(({ date: id2 }) => id2 !== id1));
+      const filterNotifiMsg = a.filter(function(obj) {
+        return !b.some(function(obj2) {
+            return +obj.date == +obj2.date;
+        });
+    });
+      console.log("fitler:", filterNotifiMsg, 'dataList:', data.list)
+      setChatBoxMsg([...chatBoxMsg, ...data.list, ...filterNotifiMsg])
+      setGetMsgs([...data.list])
 
     }
     fetchData()
-    console.log('working...')
-  }, [])
+  }, [globalState])
+
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
@@ -74,17 +82,18 @@ function Chat() {
     }])
     setTextMessage("");
   };
-  const closeChat = async() => {
+  const closeChat = async () => {
     dispatch(chatBoxHandler(""))
     const filteredMsgs = []
-    if(getMsgs.length){
+    if (getMsgs.length) {
       const results = chatBoxMsg.filter(({ _id: id1 }) => !getMsgs.some(({ _id: id2 }) => id2 === id1));
       filteredMsgs.push(...results)
-    }else{
+    } else {
       filteredMsgs.push(...chatBoxMsg)
     }
     await saveMessages(filteredMsgs)
   }
+console.log("global:", globalState.notifiMessage)
   return (
     <div className="chat">
       <header>
@@ -98,7 +107,7 @@ function Chat() {
         {chatBoxMsg?.map(msg => (<div className={(msg.receiver_id === headerData.id || msg.id !== headerData.id) ? 'rightMsg' : 'msg'}>
           <span key={msg.id}>{msg.text ?? msg.topic ?? msg.message}</span>
           <div ref={bottomEl}></div>
-          </div>))}
+        </div>))}
       </div>
       <form onSubmit={submitHandler}>
         <input type="text" value={textMessage} onChange={changeHandler} />

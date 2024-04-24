@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import socketIo from "socket.io-client";
-import { chatBoxHandler } from "../../store/reducers/chatReducer";
+import { chatBoxHandler, notifiChatHandler } from "../../store/reducers/chatReducer";
 import "./style.css";
 
 let socket;
@@ -65,6 +65,11 @@ const Header = ({ listHandler }) => {
     });
   };
 
+  const notifiMsgHandler = () => {
+    const filteredNotifiMsgs = sendMessage.filter(item => !item.description)
+    dispatch(notifiChatHandler(filteredNotifiMsgs))
+  }
+
   return (
     <div>
       <header>
@@ -101,6 +106,7 @@ const Header = ({ listHandler }) => {
                     notifi.description ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
                       name: notifi.category.name,
                       id: notifi.category.sender_id}))
+                      notifiMsgHandler()
                       setShowNotification(!showNotification)
                   }
                   }

@@ -5,6 +5,7 @@ const chatReducer = createSlice({
   initialState: {
     chatUser: "",
     chatUserId: "",
+    notifiMessage: []
   },
 
   reducers: {
@@ -12,7 +13,10 @@ const chatReducer = createSlice({
       state.chatUser = action?.payload?.name;
       state.chatUserId = action.payload.id;
     },
+    notifiChatHandler: (state, action) => {
+      state.notifiMessage = [...action?.payload];
+    },
   },
 });
-export const { chatBoxHandler } = chatReducer.actions;
+export const { chatBoxHandler, notifiChatHandler } = chatReducer.actions;
 export default chatReducer.reducer;
