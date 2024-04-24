@@ -78,7 +78,6 @@ function Dashboard() {
     };
   }, []);
   const submitHandler = async (e) => {
-    console.log('sending state:', state)
     e.preventDefault();
     if (
       project.topic === "" ||

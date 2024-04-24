@@ -3,15 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 const chatReducer = createSlice({
   name: "chatReducer",
   initialState: {
-    chatUser: "",
-    chatUserId: "",
+    chatUser: [],
     notifiMessage: []
   },
 
   reducers: {
     chatBoxHandler: (state, action) => {
-      state.chatUser = action?.payload?.name;
-      state.chatUserId = action.payload.id;
+      console.log("reducer check:", action.payload)
+      if (action.payload.close) {
+        const filteredChat = state.chatUser.filter(item => item.id !== action.payload.id)
+        state.chatUser = [...filteredChat]
+      } else {
+        state.chatUser = [...state.chatUser, action.payload]
+      }
     },
     notifiChatHandler: (state, action) => {
       state.notifiMessage = [...action?.payload];

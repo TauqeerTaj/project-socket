@@ -10,7 +10,7 @@ import "./style.css";
 let socket;
 const ENDPOINT = "http://localhost:8080";
 
-function Chat() {
+function Chat({user}) {
   const [textMessage, setTextMessage] = useState("");
   const [chatBoxMsg, setChatBoxMsg] = useState([])
   const [getMsgs, setGetMsgs] = useState([])
@@ -32,7 +32,6 @@ function Chat() {
             return +obj.date == +obj2.date;
         });
     });
-      console.log("fitler:", filterNotifiMsg, 'dataList:', data.list)
       setChatBoxMsg([...chatBoxMsg, ...data.list, ...filterNotifiMsg])
       setGetMsgs([...data.list])
 
@@ -81,8 +80,8 @@ function Chat() {
     }])
     setTextMessage("");
   };
-  const closeChat = async () => {
-    dispatch(chatBoxHandler(""))
+  const closeChat = async (data) => {
+    dispatch(chatBoxHandler({close: true, ...data}))
     const filteredMsgs = []
     if (getMsgs.length) {
       const results = chatBoxMsg.filter(({ _id: id1 }) => !getMsgs.some(({ _id: id2 }) => id2 === id1));
@@ -92,14 +91,14 @@ function Chat() {
     }
     await saveMessages(filteredMsgs)
   }
-console.log("global:", globalState.notifiMessage)
+  console.log("global state:", globalState)
   return (
     <div className="chat">
       <header>
-        <h4>{globalState.chatUser}</h4>
+        <h4>{user.name}</h4>
         <FontAwesomeIcon
           icon={faClose}
-          onClick={() => closeChat()}
+          onClick={() => closeChat({name: user.name, id: user.id})}
         />
       </header>
       <div className="message-box">

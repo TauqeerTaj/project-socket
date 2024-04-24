@@ -44,7 +44,6 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      console.log("check message:",data)
       if (data.receiver_id === state?.id ?? headerInfo?.id) {
         setCountData([...countData, data]);
         setCount(true);
@@ -54,9 +53,6 @@ const Header = ({ listHandler }) => {
 
   const moveToDetailsPage = (details) => {
     setShowNotification(!showNotification);
-    // console.log("sendMessage:", sendMessage)
-    // const filteredProjects = sendMessage.filter(item => item.topic !== details.topic)
-    // setSendMessage([...filteredProjects])
     navigate("/project-details", {
       state: {
         ...details,
@@ -112,7 +108,6 @@ const Header = ({ listHandler }) => {
                   }
                 >
                   <div>
-                    {console.log("notifi:", notifi)}
                     <strong>{notifi.description? 'Project:' : 'Message:'}</strong>
                     <span>{notifi.topic}</span>
                   </div>

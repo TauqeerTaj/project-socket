@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 
 function App() {
   const state = useSelector((state) => state.chat);
+  console.log("show chat:", state.chatUser)
   return (
     <>
       <Routing />
-      {state?.chatUser && <Chat />}
+      <div className="chat-popup">{state?.chatUser.map(item => item.id && <Chat user={item} />)}</div>
     </>
   );
 }
