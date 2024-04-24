@@ -2,7 +2,7 @@ body::after {
   content: "";
   background: url('./assets/university-background.jpeg') no-repeat;
   background-size: cover;
-  opacity: 0.7;
+  opacity: 0.5;
   top: 0;
   left: 0;
   bottom: 0;

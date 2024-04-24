@@ -27,7 +27,6 @@ function Chat() {
       data.list.sort(function (a, b) { return a.date - b.date })
       const a = globalState.notifiMessage;
       const b = data.list
-      // const filterNotifiMsg = a.filter(({ date: id1 }) => !b.some(({ date: id2 }) => id2 !== id1));
       const filterNotifiMsg = a.filter(function(obj) {
         return !b.some(function(obj2) {
             return +obj.date == +obj2.date;
