@@ -9,12 +9,16 @@ const chatReducer = createSlice({
 
   reducers: {
     chatBoxHandler: (state, action) => {
-      console.log("reducer check:", action.payload)
       if (action.payload.close) {
         const filteredChat = state.chatUser.filter(item => item.id !== action.payload.id)
         state.chatUser = [...filteredChat]
       } else {
-        state.chatUser = [...state.chatUser, action.payload]
+        const array = state.chatUser.some((item) => {
+          return item.id === action.payload.id
+        })
+        if(!array){
+          state.chatUser = [...state.chatUser, action.payload]
+        }
       }
     },
     notifiChatHandler: (state, action) => {

@@ -23,7 +23,7 @@ function Chat({user}) {
 
   useEffect(() => {
     async function fetchData() {
-      let data = await getMessages();
+      let data = await getMessages(headerData.id, user.id);
       data.list.sort(function (a, b) { return a.date - b.date })
       const a = globalState.notifiMessage;
       const b = data.list
@@ -76,7 +76,8 @@ function Chat({user}) {
     setChatBoxMsg([...chatBoxMsg, {
       text: textMessage,
       id: headerData.id,
-      date: Date.now()
+      date: Date.now(),
+      receiver: user.id
     }])
     setTextMessage("");
   };
