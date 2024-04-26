@@ -67,7 +67,7 @@ function Chat({user}) {
             id: globalState.chatUserId,
             sender_id: headerData?.id
           },
-          receiver_id: globalState.chatUserId,
+          receiver_id: user.id,
           date: Date.now()
         },
         id: "dummy id",
