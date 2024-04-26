@@ -42,7 +42,7 @@ function Chat({user}) {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      if (data.receiver_id === headerData?.id) {
+      if (data.receiver_id === headerData?.id && data.category.sender_id === user.id) {
         setChatBoxMsg([...chatBoxMsg, data]);
       }
     });
