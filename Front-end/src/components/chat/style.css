@@ -19,7 +19,7 @@
 }
 .chat .message-box {
   height: 300px;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
 }
 .chat form {
   width: -webkit-fill-available;

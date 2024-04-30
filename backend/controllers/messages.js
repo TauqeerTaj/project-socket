@@ -2,13 +2,12 @@ const Messages = require("../models/messages");
 
 //Save Messages
 exports.messages = async (req, res, next) => {
-    console.log('body check:', req.body)
     try {
         await req.body.forEach(item => {
             Messages.find({"id": item.id ?? item.category.sender_id, "message" : item.text ?? item.topic})
             .then(data => {
                 if(data.length < 1){
-                    let messagesData = new Messages({id: item.id ?? item.category.sender_id, receiver_id: item.receiver, message: item.text ?? item.topic, date: item.date});
+                    let messagesData = new Messages({id: item.id ?? item.category.sender_id, receiver_id: item.receiver ?? item.receiver_id, message: item.text ?? item.topic, date: item.date});
                     messagesData.save();
                 }
             })

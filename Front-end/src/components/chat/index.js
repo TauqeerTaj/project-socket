@@ -10,7 +10,7 @@ import "./style.css";
 let socket;
 const ENDPOINT = "http://localhost:8080";
 
-function Chat({user}) {
+function Chat({ user }) {
   const [textMessage, setTextMessage] = useState("");
   const [chatBoxMsg, setChatBoxMsg] = useState([])
   const [getMsgs, setGetMsgs] = useState([])
@@ -27,17 +27,29 @@ function Chat({user}) {
       data.list.sort(function (a, b) { return a.date - b.date })
       const a = globalState.notifiMessage;
       const b = data.list
-      const filterNotifiMsg = a.filter(function(obj) {
-        return !b.some(function(obj2) {
-            return +obj.date == +obj2.date;
+      const filterNotifiMsg = a.filter(function (obj) {
+        return !b.some(function (obj2) {
+          return +obj.date == +obj2.date;
         });
-    });
-      setChatBoxMsg([...chatBoxMsg, ...data.list, ...filterNotifiMsg])
+      });
+      if (filterNotifiMsg.length) {
+        const checkItemId = filterNotifiMsg.some(function (row) {
+          return user.id == row.category.sender_id;
+        })
+        if(checkItemId){
+          const filter = chatBoxMsg.filter(item => item.id === filterNotifiMsg[0].id)
+          if(!filter.length){
+            setChatBoxMsg([...chatBoxMsg, ...data.list, ...filterNotifiMsg])
+          }
+        }
+      } else {
+        setChatBoxMsg([...chatBoxMsg, ...data.list])
+      }
       setGetMsgs([...data.list])
-
+      scrollToBottom()
     }
     fetchData()
-  }, [globalState])
+  }, [])
 
 
   useEffect(() => {
@@ -82,7 +94,7 @@ function Chat({user}) {
     setTextMessage("");
   };
   const closeChat = async (data) => {
-    dispatch(chatBoxHandler({close: true, ...data}))
+    dispatch(chatBoxHandler({ close: true, ...data }))
     const filteredMsgs = []
     if (getMsgs.length) {
       const results = chatBoxMsg.filter(({ _id: id1 }) => !getMsgs.some(({ _id: id2 }) => id2 === id1));
@@ -92,21 +104,20 @@ function Chat({user}) {
     }
     await saveMessages(filteredMsgs)
   }
-  console.log("global state:", globalState)
   return (
     <div className="chat">
       <header>
         <h4>{user.name}</h4>
         <FontAwesomeIcon
           icon={faClose}
-          onClick={() => closeChat({name: user.name, id: user.id})}
+          onClick={() => closeChat({ name: user.name, id: user.id })}
         />
       </header>
       <div className="message-box">
         {chatBoxMsg?.map(msg => (<div className={(msg.receiver_id === headerData.id || msg.id !== headerData.id) ? 'rightMsg' : 'msg'}>
-          <span key={msg.id}>{msg.text ?? msg.topic ?? msg.message}</span>
-          <div ref={bottomEl}></div>
+          {msg.category ? msg.category.sender_id === user.id && <span key={msg.id}>{msg.text ?? msg.topic ?? msg.message}</span> : <span key={msg.id}>{msg.text ?? msg.topic ?? msg.message}</span>}        
         </div>))}
+        <div ref={bottomEl}></div>
       </div>
       <form onSubmit={submitHandler}>
         <input type="text" value={textMessage} onChange={changeHandler} />
