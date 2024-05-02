@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./form.css";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL
+
 function Signup() {
   const [profileImage, setProfileImage] = useState();
   const [signupData, setSignupData] = useState({
@@ -30,7 +32,7 @@ function Signup() {
   const submitHandler = (e) => {
     e.preventDefault();
     axios
-      .put("https://project-socket-backend.vercel.app/auth/signup", signupData)
+      .put(`${BASE_URL}/auth/signup`, signupData)
       .then((res) => {
         if (res.data.message) {
           navigate("/");

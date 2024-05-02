@@ -4,6 +4,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL
+console.log("base url:", BASE_URL)
+
 function Signin() {
   const [loading, setLoading] = useState(false);
   const [signinData, setSigninData] = useState({
@@ -18,7 +21,7 @@ function Signin() {
     e.preventDefault();
     setLoading(true);
     axios
-      .post("https://project-socket-backend.vercel.app/auth/login", signinData)
+      .post(`${BASE_URL}/auth/login`, signinData)
       .then((res) => {
         if (res) {
           localStorage.setItem("token", res.data.token);

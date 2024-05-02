@@ -12,7 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "./dashboard.css";
 
 let socket;
-const ENDPOINT = "https://project-socket-backend.vercel.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL
+const ENDPOINT = BASE_URL;
 
 function Dashboard() {
   const { state } = useLocation();
@@ -54,7 +55,7 @@ function Dashboard() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`https://project-socket-backend.vercel.app/auth/${category}s`)
+      .get(`${BASE_URL}/auth/${category}s`)
       .then((res) => {
         setLoading(false);
         setList([...res.data.list]);
@@ -97,7 +98,7 @@ function Dashboard() {
     };
     try {
       const result = await axios.post(
-        "https://project-socket-backend.vercel.app/project/studentData",
+        `${BASE_URL}/project/studentData`,
         payload
       );
       toast.success(result.data.message);
@@ -142,7 +143,7 @@ function Dashboard() {
     setProject((project) => ({ ...project, [e.target.name]: e.target.value}));
     if (e.target.name === "searchCategory") {
       const searchResult = await axios.get(
-        `https://project-socket-backend.vercel.app/search/category?name=${e.target.value}`
+        `${BASE_URL}/search/category?name=${e.target.value}`
       );
       setList([...searchResult.data]);
     }

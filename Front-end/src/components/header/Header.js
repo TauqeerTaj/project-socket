@@ -8,7 +8,8 @@ import { chatBoxHandler, notifiChatHandler } from "../../store/reducers/chatRedu
 import "./style.css";
 
 let socket;
-const ENDPOINT = "https://project-socket-backend.vercel.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL
+const ENDPOINT = BASE_URL;
 
 const Header = ({ listHandler }) => {
   const { state } = useLocation();

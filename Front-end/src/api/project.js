@@ -1,10 +1,12 @@
 import axios from "axios";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL 
+
 //GET Projects
 export const getProjectList = async (id) => {
   let data = [];
   await axios
-    .get(`https://project-socket-backend.vercel.app/project/projects?id=${id}`)
+    .get(`${BASE_URL}/project/projects?id=${id}`)
     .then((res) => {
       data = [...res.data.list];
     })
@@ -17,7 +19,7 @@ export const getProjectList = async (id) => {
 export const getApprovalList = async () => {
   let data = [];
   await axios
-    .get(`https://project-socket-backend.vercel.app/project/approvedProjects`)
+    .get(`${BASE_URL}/project/approvedProjects`)
     .then((res) => {
       data = [...res.data.list];
     })
@@ -30,7 +32,7 @@ export const getApprovalList = async () => {
 export const approve = async (id) => {
   let data;
   await axios
-    .put(`https://project-socket-backend.vercel.app/project/approve?approvedId=${id}`)
+    .put(`${BASE_URL}/project/approve?approvedId=${id}`)
     .then((res) => {
       data = res.data.message;
     })
@@ -43,7 +45,7 @@ export const approve = async (id) => {
 export const Delete = async (id) => {
   let data;
   await axios
-    .delete(`https://project-socket-backend.vercel.app/project/delete?deletedId=${id}`)
+    .delete(`${BASE_URL}/project/delete?deletedId=${id}`)
     .then((res) => {
       data = res.data;
     })

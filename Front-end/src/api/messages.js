@@ -1,10 +1,12 @@
 import axios from "axios";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL
+
 //Save Messages
 export const saveMessages = async (message) => {
     let data;
     await axios
-      .post(`http://localhost:8080/messages/saveMessage`, message)
+      .post(`${BASE_URL}/messages/saveMessage`, message)
       .then((res) => {
         data = res.data.message;
       })
@@ -18,7 +20,7 @@ export const saveMessages = async (message) => {
 export const getMessages = async (sender, chatUser) => {
   let data;
   await axios
-    .get(`http://localhost:8080/messages/getMessages/${sender}/${chatUser}`)
+    .get(`${BASE_URL}/messages/getMessages/${sender}/${chatUser}`)
     .then((res) => {
       data = res.data;
     })

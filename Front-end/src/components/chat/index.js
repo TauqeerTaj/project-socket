@@ -8,7 +8,8 @@ import { saveMessages, getMessages } from "../../api/messages";
 import "./style.css";
 
 let socket;
-const ENDPOINT = "https://project-socket-backend.vercel.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL
+const ENDPOINT = BASE_URL;
 
 function Chat({ user }) {
   const [textMessage, setTextMessage] = useState("");

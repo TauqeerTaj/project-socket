@@ -40,6 +40,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 const PORT = process.env.PORT;
+const CORS_PORT = process.env.CORS_PORT
 // const MongoConnect = process.env.MongoURI
 const server = http.listen(
   PORT,
@@ -52,8 +53,8 @@ const server = http.listen(
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://project-socket-backend.vercel.app",
-    // credentials: true,
+    origin: CORS_PORT,
+    credentials: true,
   },
 });
 io.on("connection", (socket) => {
