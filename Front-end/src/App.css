@@ -1,3 +1,20 @@
-body{
-  background-color: aquamarine;
+body::after {
+  content: "";
+  background: url("./assets/university-background.jpeg") no-repeat;
+  background-size: cover;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
+.chat-popup {
+  display: flex;
+  justify-content: end;
+  position: fixed;
+  bottom: 0;
+  z-index: 1200;
+  width: 100%;
 }

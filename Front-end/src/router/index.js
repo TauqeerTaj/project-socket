@@ -1,46 +1,49 @@
-import React, {useState} from 'react'
-import {Routes, Route, useNavigate} from "react-router-dom";
-import Signup from '../components/form/signup';
-import Signin from '../components/form/signin';
-import Dashboard from '../components/dashboard';
-import ProjectDetails from '../components/project/project-details/ProjectDetails';
-import ProjectList from '../components/project/project-list/ProjectList';
-import Header from '../components/header/Header'
+import React, { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Signup from "../components/form/signup";
+import Signin from "../components/form/signin";
+import Dashboard from "../components/dashboard";
+import ProjectDetails from "../components/project/project-details/ProjectDetails";
+import ProjectList from "../components/project/project-list/ProjectList";
+import Header from "../components/header/Header";
 
 function Routing() {
-    const navigate = useNavigate()
-    let token = localStorage.getItem('token')
+  const navigate = useNavigate();
+  let token = localStorage.getItem("token");
 
-    const [listLoader, setListLoader] = useState(false)
+  const [listLoader, setListLoader] = useState(false);
 
-    React.useEffect(()=>{
-        if(!token){
-            navigate('/')
-        }
-    },[])
-
-    const projectListHandler = (data) => {
-        setListLoader(data)
+  React.useEffect(() => {
+    if (!token) {
+      navigate("/");
     }
+  }, []);
 
-    return (
+  const projectListHandler = (data) => {
+    setListLoader(data);
+  };
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Signin />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
+      </Routes>
+      {token && (
         <>
-            {token ?
-            <>
-            <Header listHandler = {projectListHandler}/>
-            <Routes>
-            <Route path='/dashboard' element={<Dashboard />}></Route>
-            <Route path='/projects' element={<ProjectList listLoader={listLoader}/>}></Route>
-            <Route path='/project-details' element={<ProjectDetails />}></Route>
-            </Routes>
-            </>:
-            <Routes>
-            <Route path='/' element={<Signin/>}></Route>
-            <Route path='/signup' element={<Signup/>}></Route>
-            </Routes>
-            }
+          <Header listHandler={projectListHandler} />
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route
+              path="/projects"
+              element={<ProjectList listLoader={listLoader} />}
+            ></Route>
+            <Route path="/project-details" element={<ProjectDetails />}></Route>
+          </Routes>
         </>
-    )
+      )}
+    </>
+  );
 }
 
-export default Routing
+export default Routing;

@@ -18,7 +18,14 @@ const userSchema = new Schema({
         id: {
             type: String,
             required: true
+        },
+        sender_id: {
+            type: String,
+            required: true
         }
+    },
+    file: {
+        type: String
     },
     approved: {
         type: Boolean,

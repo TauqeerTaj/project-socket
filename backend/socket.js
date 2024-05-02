@@ -1,9 +1,10 @@
+const CORS_PORT = process.env.CORS_PORT
 let socketIO;
 module.exports = {
     init: httpServer => {
         socketIO = require('socket.io')(httpServer, {
             cors: {
-                origin: "http://localhost:3000"
+                origin: CORS_PORT
             }
         });
         return socketIO
