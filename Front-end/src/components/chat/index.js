@@ -9,7 +9,7 @@ import "./style.css";
 
 let socket;
 const BASE_URL = process.env.REACT_APP_BASE_URL
-const ENDPOINT = BASE_URL;
+const ENDPOINT = process.env.SOCKET_URL;
 
 function Chat({ user }) {
   const [textMessage, setTextMessage] = useState("");

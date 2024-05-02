@@ -13,7 +13,8 @@ import "./dashboard.css";
 
 let socket;
 const BASE_URL = process.env.REACT_APP_BASE_URL
-const ENDPOINT = BASE_URL;
+const ENDPOINT = process.env.SOCKET_URL;
+
 
 function Dashboard() {
   const { state } = useLocation();
