@@ -28,6 +28,7 @@ function Signin() {
               name: res.data.user.firstName + res.data.user.lastName,
               profile: res.data.user.profileImage,
               category: res.data.user.category,
+              id: res.data.user._id,
             })
           );
           setLoading(false);

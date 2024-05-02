@@ -1,16 +1,14 @@
 .chat {
-  position: absolute;
-  right: 20px;
-  bottom: 0;
   width: 350px;
   background-color: #fff;
   border: 1px solid #008cba;
-  z-index: 1200;
+  margin-right:5px;
 }
 .chat header {
   background-color: #008cba;
   color: #fff;
   padding: 3px 5px;
+  margin-bottom:5px;
 }
 .chat header h4 {
   padding: 0px;
@@ -21,6 +19,7 @@
 }
 .chat .message-box {
   height: 300px;
+  overflow-y: scroll;
 }
 .chat form {
   width: -webkit-fill-available;
@@ -40,4 +39,25 @@
   outline: none;
   height: 25px;
   border: none;
+}
+.chat .msg {
+  display: flex;
+  margin:0px 5px 5px 5px;
+}
+.chat .msg span{
+  background-color: #008cba;
+  color: #fff;
+  padding:5px;
+  border-radius: 10px;
+}
+.chat .rightMsg{
+  display: flex;
+  margin:0px 5px 5px 5px;
+  flex-direction: row-reverse;
+}
+.chat .rightMsg span{
+  background-color: coral;
+  color: #fff;
+  padding:5px;
+  border-radius: 10px;
 }

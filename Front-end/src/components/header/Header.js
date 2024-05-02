@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
 import socketIo from "socket.io-client";
+import { chatBoxHandler, notifiChatHandler } from "../../store/reducers/chatReducer";
 import "./style.css";
 
 let socket;
@@ -11,6 +13,7 @@ const ENDPOINT = "http://localhost:8080";
 const Header = ({ listHandler }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   socket = socketIo(ENDPOINT, { transports: ["websocket"] });
 
   const [countData, setCountData] = useState([]);
@@ -21,7 +24,6 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("headerData"));
-    console.log("header==>:", data);
     if (data) {
       setHeaderInfo(data);
     }
@@ -33,7 +35,7 @@ const Header = ({ listHandler }) => {
       setSendMessage([...sendMessage, ...countData]);
       setShowNotification(!showNotification);
     }
-    if (sendMessage.length > 0) {
+    if (sendMessage?.length > 0) {
       setShowNotification(!showNotification);
     }
     setCountData([]);
@@ -42,7 +44,7 @@ const Header = ({ listHandler }) => {
 
   useEffect(() => {
     socket.on("sendMessage", (data) => {
-      if (data.receiver_id === headerInfo?.id) {
+      if (data.receiver_id === state?.id ?? headerInfo?.id) {
         setCountData([...countData, data]);
         setCount(true);
       }
@@ -59,6 +61,11 @@ const Header = ({ listHandler }) => {
     });
   };
 
+  const notifiMsgHandler = () => {
+    const filteredNotifiMsgs = sendMessage.filter(item => !item.description)
+    dispatch(notifiChatHandler(filteredNotifiMsgs))
+  }
+
   return (
     <div>
       <header>
@@ -73,7 +80,7 @@ const Header = ({ listHandler }) => {
           {countData.length > 0 && count && (
             <count onClick={countHandler}>{countData.length}</count>
           )}
-          <FontAwesomeIcon icon={faBell} onClick={countHandler} />
+          <FontAwesomeIcon icon={faBell} onClick={() => countHandler()} />
           <span
             onClick={() => {
               localStorage.removeItem("token");
@@ -81,6 +88,7 @@ const Header = ({ listHandler }) => {
               navigate("/");
               socket.emit("disconn");
               socket.off();
+              dispatch(chatBoxHandler(""))
             }}
           >
             Logout
@@ -90,10 +98,17 @@ const Header = ({ listHandler }) => {
               {sendMessage?.map((notifi) => (
                 <div
                   className="content"
-                  onClick={() => moveToDetailsPage(notifi)}
+                  onClick={() => {
+                    notifi.description ? moveToDetailsPage(notifi) : dispatch(chatBoxHandler({
+                      name: notifi.category.name,
+                      id: notifi.category.sender_id}))
+                      notifiMsgHandler()
+                      setShowNotification(!showNotification)
+                  }
+                  }
                 >
                   <div>
-                    <strong>Project:</strong>
+                    <strong>{notifi.description? 'Project:' : 'Message:'}</strong>
                     <span>{notifi.topic}</span>
                   </div>
                   <div>

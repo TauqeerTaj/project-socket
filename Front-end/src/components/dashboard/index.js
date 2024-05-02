@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import socketIo from "socket.io-client";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import "./dashboard.css";
 import { chatBoxHandler } from "../../store/reducers/chatReducer";
+import "react-toastify/dist/ReactToastify.css";
+import "./dashboard.css";
 
 let socket;
 const ENDPOINT = "http://localhost:8080";
@@ -17,6 +17,7 @@ const ENDPOINT = "http://localhost:8080";
 function Dashboard() {
   const { state } = useLocation();
   const dispatch = useDispatch();
+  const inputFileRef = useRef("")
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -91,6 +92,7 @@ function Dashboard() {
       category: {
         name: state.name,
         id: selectedMember,
+        sender_id: state.id
       },
     };
     try {
@@ -114,6 +116,7 @@ function Dashboard() {
         description: "",
         file: "",
       });
+      inputFileRef.current.value = ""
     } catch (err) {
       toast.error(err.response.data.message);
     }
@@ -136,7 +139,7 @@ function Dashboard() {
         setProject((v) => ({ ...v, [e.target.name]: reader.result }));
       };
     }
-    setProject((project) => ({ ...project, [e.target.name]: e.target.value }));
+    setProject((project) => ({ ...project, [e.target.name]: e.target.value}));
     if (e.target.name === "searchCategory") {
       const searchResult = await axios.get(
         `http://localhost:8080/search/category?name=${e.target.value}`
@@ -193,6 +196,7 @@ function Dashboard() {
                   type="file"
                   accept="pdf"
                   name="file"
+                  ref={inputFileRef}
                   onChange={changeHandler}
                 />
               </div>
@@ -234,7 +238,10 @@ function Dashboard() {
                         icon={faCommentDots}
                         onClick={() =>
                           dispatch(
-                            chatBoxHandler(item.firstName + item.lastName)
+                            chatBoxHandler({
+                              name: item.firstName + item.lastName,
+                              id: item._id,
+                            })
                           )
                         }
                       />

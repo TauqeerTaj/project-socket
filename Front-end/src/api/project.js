@@ -13,7 +13,7 @@ export const getProjectList = async (id) => {
     });
   return data;
 };
-//Approve Projects
+//Approved Projects
 export const getApprovalList = async () => {
   let data = [];
   await axios
