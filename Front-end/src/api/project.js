@@ -4,7 +4,7 @@ import axios from "axios";
 export const getProjectList = async (id) => {
   let data = [];
   await axios
-    .get(`http://localhost:8080/project/projects?id=${id}`)
+    .get(`https://project-socket-backend.vercel.app/project/projects?id=${id}`)
     .then((res) => {
       data = [...res.data.list];
     })
@@ -17,7 +17,7 @@ export const getProjectList = async (id) => {
 export const getApprovalList = async () => {
   let data = [];
   await axios
-    .get(`http://localhost:8080/project/approvedProjects`)
+    .get(`https://project-socket-backend.vercel.app/project/approvedProjects`)
     .then((res) => {
       data = [...res.data.list];
     })
@@ -30,7 +30,7 @@ export const getApprovalList = async () => {
 export const approve = async (id) => {
   let data;
   await axios
-    .put(`http://localhost:8080/project/approve?approvedId=${id}`)
+    .put(`https://project-socket-backend.vercel.app/project/approve?approvedId=${id}`)
     .then((res) => {
       data = res.data.message;
     })
@@ -43,7 +43,7 @@ export const approve = async (id) => {
 export const Delete = async (id) => {
   let data;
   await axios
-    .delete(`http://localhost:8080/project/delete?deletedId=${id}`)
+    .delete(`https://project-socket-backend.vercel.app/project/delete?deletedId=${id}`)
     .then((res) => {
       data = res.data;
     })

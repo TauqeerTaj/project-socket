@@ -18,7 +18,7 @@ function Signin() {
     e.preventDefault();
     setLoading(true);
     axios
-      .post("http://localhost:8080/auth/login", signinData)
+      .post("https://project-socket-backend.vercel.app/auth/login", signinData)
       .then((res) => {
         if (res) {
           localStorage.setItem("token", res.data.token);

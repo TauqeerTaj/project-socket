@@ -30,7 +30,7 @@ function Signup() {
   const submitHandler = (e) => {
     e.preventDefault();
     axios
-      .put("http://localhost:8080/auth/signup", signupData)
+      .put("https://project-socket-backend.vercel.app/auth/signup", signupData)
       .then((res) => {
         if (res.data.message) {
           navigate("/");
