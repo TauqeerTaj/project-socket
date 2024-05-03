@@ -30,7 +30,7 @@ function Signup() {
   const submitHandler = (e) => {
     e.preventDefault();
     axios
-      .put("http://localhost:8080/auth/signup", signupData)
+      .put(`${process.env.REACT_APP_BASE_URL}/auth/signup`, signupData)
       .then((res) => {
         if (res.data.message) {
           navigate("/");

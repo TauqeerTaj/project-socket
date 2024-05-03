@@ -42,7 +42,7 @@ function Dashboard() {
 
   // const getProjects = () => {
   //   axios
-  //     .get(`http://localhost:8080/project/projects?id=${state?.id}`)
+  //     .get(`${process.env.REACT_APP_BASE_URL}/project/projects?id=${state?.id}`)
   //     .then((res) => {
   //       setLoading(false);
   //       setProjectList([...res.data.list]);
@@ -54,7 +54,7 @@ function Dashboard() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:8080/auth/${category}s`)
+      .get(`${process.env.REACT_APP_BASE_URL}/auth/${category}s`)
       .then((res) => {
         setLoading(false);
         setList([...res.data.list]);
@@ -97,7 +97,7 @@ function Dashboard() {
     };
     try {
       const result = await axios.post(
-        "http://localhost:8080/project/studentData",
+        `${process.env.REACT_APP_BASE_URL}/project/studentData`,
         payload
       );
       toast.success(result.data.message);
@@ -142,7 +142,7 @@ function Dashboard() {
     setProject((project) => ({ ...project, [e.target.name]: e.target.value}));
     if (e.target.name === "searchCategory") {
       const searchResult = await axios.get(
-        `http://localhost:8080/search/category?name=${e.target.value}`
+        `${process.env.REACT_APP_BASE_URL}/search/category?name=${e.target.value}`
       );
       setList([...searchResult.data]);
     }
