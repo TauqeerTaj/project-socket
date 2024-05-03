@@ -40,6 +40,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 const PORT = process.env.PORT;
+const CORS = process.env.CORS_URL;
 // const MongoConnect = process.env.MongoURI
 const server = http.listen(
   PORT,
@@ -52,7 +53,7 @@ const server = http.listen(
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.COR,
     // credentials: true,
   },
 });

@@ -18,7 +18,7 @@ function Signin() {
     e.preventDefault();
     setLoading(true);
     axios
-      .post("http://localhost:8080/auth/login", signinData)
+      .post(`${process.env.REACT_APP_BASE_URL}/auth/login`, signinData)
       .then((res) => {
         if (res) {
           localStorage.setItem("token", res.data.token);
