@@ -8,7 +8,7 @@ import { saveMessages, getMessages } from "../../api/messages";
 import "./style.css";
 
 let socket;
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = process.env.REACT_APP_BASE_URL;
 
 function Chat({ user }) {
   const [textMessage, setTextMessage] = useState("");
