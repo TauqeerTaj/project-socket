@@ -8,7 +8,7 @@ import { chatBoxHandler, notifiChatHandler } from "../../store/reducers/chatRedu
 import "./style.css";
 
 let socket;
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = process.env.REACT_APP_BASE_URL;
 
 const Header = ({ listHandler }) => {
   const { state } = useLocation();

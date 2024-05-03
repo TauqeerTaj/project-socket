@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./dashboard.css";
 
 let socket;
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = process.env.REACT_APP_BASE_URL;
 
 function Dashboard() {
   const { state } = useLocation();
